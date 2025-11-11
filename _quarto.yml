@@ -38,4 +38,5 @@ format:
     toc: true
     code-copy: true
     code-fold: false
+    number-sections: false
 
