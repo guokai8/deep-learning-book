@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; 第三章：分类与逻辑回归 (Classification &amp; Logistic Regression) – 深度学习完整教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter4.html" rel="next">
+<link href="./Chapter2.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5ea8f22911a6df30576a2a25a24cdd7a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">第一部分：基础篇</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">深度学习完整教程</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">📋 课程整体框架</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一部分：基础篇</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">机器学习完整课程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">第二章：回归 (Regression)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">第四章：深度神经网络基础 (Deep Neural Networks)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二部分：进阶篇</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">第五章：优化算法与训练技巧 (Optimization &amp; Training Tricks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">第六章：卷积神经网络 (Convolutional Neural Networks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">第七章：循环神经网络 (Recurrent Neural Networks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">第八章：Attention 与 Transformer</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三部分：实践与应用</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">第九章：迁移学习与微调 (Transfer Learning &amp; Fine-tuning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">第十章：强化学习 (Reinforcement Learning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">第十一章：无监督学习 (Unsupervised Learning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">第十二章：可解释性与对抗攻击</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">第十三章：大语言模型时代</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#章节目标" id="toc-章节目标" class="nav-link active" data-scroll-target="#章节目标"><span class="header-section-number">4.1</span> 📌 章节目标</a></li>
+  <li><a href="#什么是分类" id="toc-什么是分类" class="nav-link" data-scroll-target="#什么是分类"><span class="header-section-number">4.2</span> 3.1 什么是分类？</a>
+  <ul class="collapse">
+  <li><a href="#分类-vs-回归" id="toc-分类-vs-回归" class="nav-link" data-scroll-target="#分类-vs-回归"><span class="header-section-number">4.2.1</span> 🎯 分类 vs 回归</a></li>
+  <li><a href="#分类问题的类型" id="toc-分类问题的类型" class="nav-link" data-scroll-target="#分类问题的类型"><span class="header-section-number">4.2.2</span> 📊 分类问题的类型</a></li>
+  </ul></li>
+  <li><a href="#为什么不能用线性回归做分类" id="toc-为什么不能用线性回归做分类" class="nav-link" data-scroll-target="#为什么不能用线性回归做分类"><span class="header-section-number">4.3</span> 3.2 为什么不能用线性回归做分类？</a>
+  <ul class="collapse">
+  <li><a href="#尝试用回归做分类" id="toc-尝试用回归做分类" class="nav-link" data-scroll-target="#尝试用回归做分类"><span class="header-section-number">4.3.1</span> 🤔 尝试用回归做分类</a></li>
+  <li><a href="#问题来了" id="toc-问题来了" class="nav-link" data-scroll-target="#问题来了"><span class="header-section-number">4.3.2</span> ⚠️ 问题来了！</a></li>
+  <li><a href="#我们需要什么" id="toc-我们需要什么" class="nav-link" data-scroll-target="#我们需要什么"><span class="header-section-number">4.3.3</span> 💡 我们需要什么？</a></li>
+  </ul></li>
+  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"><span class="header-section-number">4.4</span> 3.3 Logistic Regression</a>
+  <ul class="collapse">
+  <li><a href="#核心思想" id="toc-核心思想" class="nav-link" data-scroll-target="#核心思想"><span class="header-section-number">4.4.1</span> 🔹 核心思想</a></li>
+  <li><a href="#sigmoid-函数" id="toc-sigmoid-函数" class="nav-link" data-scroll-target="#sigmoid-函数"><span class="header-section-number">4.4.2</span> 📐 Sigmoid 函数</a></li>
+  <li><a href="#sigmoid-的性质" id="toc-sigmoid-的性质" class="nav-link" data-scroll-target="#sigmoid-的性质"><span class="header-section-number">4.4.3</span> 🔍 Sigmoid 的性质</a></li>
+  <li><a href="#决策规则" id="toc-决策规则" class="nav-link" data-scroll-target="#决策规则"><span class="header-section-number">4.4.4</span> 🎯 决策规则</a></li>
+  <li><a href="#决策边界-decision-boundary" id="toc-决策边界-decision-boundary" class="nav-link" data-scroll-target="#决策边界-decision-boundary"><span class="header-section-number">4.4.5</span> 📊 决策边界 (Decision Boundary)</a></li>
+  </ul></li>
+  <li><a href="#loss-function-for-classification" id="toc-loss-function-for-classification" class="nav-link" data-scroll-target="#loss-function-for-classification"><span class="header-section-number">4.5</span> 3.4 Loss Function for Classification</a>
+  <ul class="collapse">
+  <li><a href="#为什么不用-mse" id="toc-为什么不用-mse" class="nav-link" data-scroll-target="#为什么不用-mse"><span class="header-section-number">4.5.1</span> 🚫 为什么不用 MSE？</a></li>
+  <li><a href="#cross-entropy-loss" id="toc-cross-entropy-loss" class="nav-link" data-scroll-target="#cross-entropy-loss"><span class="header-section-number">4.5.2</span> ✅ Cross Entropy Loss</a></li>
+  <li><a href="#可视化-cross-entropy" id="toc-可视化-cross-entropy" class="nav-link" data-scroll-target="#可视化-cross-entropy"><span class="header-section-number">4.5.3</span> 📊 可视化 Cross Entropy</a></li>
+  <li><a href="#完整的-loss-function" id="toc-完整的-loss-function" class="nav-link" data-scroll-target="#完整的-loss-function"><span class="header-section-number">4.5.4</span> 🧮 完整的 Loss Function</a></li>
+  </ul></li>
+  <li><a href="#梯度下降求解" id="toc-梯度下降求解" class="nav-link" data-scroll-target="#梯度下降求解"><span class="header-section-number">4.6</span> 3.5 梯度下降求解</a>
+  <ul class="collapse">
+  <li><a href="#计算梯度" id="toc-计算梯度" class="nav-link" data-scroll-target="#计算梯度"><span class="header-section-number">4.6.1</span> 📐 计算梯度</a></li>
+  <li><a href="#从零实现-logistic-regression" id="toc-从零实现-logistic-regression" class="nav-link" data-scroll-target="#从零实现-logistic-regression"><span class="header-section-number">4.6.2</span> 💻 从零实现 Logistic Regression</a></li>
+  <li><a href="#可视化决策边界" id="toc-可视化决策边界" class="nav-link" data-scroll-target="#可视化决策边界"><span class="header-section-number">4.6.3</span> 📊 可视化决策边界</a></li>
+  </ul></li>
+  <li><a href="#评估分类模型" id="toc-评估分类模型" class="nav-link" data-scroll-target="#评估分类模型"><span class="header-section-number">4.7</span> 3.6 评估分类模型</a>
+  <ul class="collapse">
+  <li><a href="#confusion-matrix-混淆矩阵" id="toc-confusion-matrix-混淆矩阵" class="nav-link" data-scroll-target="#confusion-matrix-混淆矩阵"><span class="header-section-number">4.7.1</span> 📊 Confusion Matrix (混淆矩阵)</a></li>
+  <li><a href="#评估指标" id="toc-评估指标" class="nav-link" data-scroll-target="#评估指标"><span class="header-section-number">4.7.2</span> 🔢 评估指标</a></li>
+  <li><a href="#计算评估指标" id="toc-计算评估指标" class="nav-link" data-scroll-target="#计算评估指标"><span class="header-section-number">4.7.3</span> 💻 计算评估指标</a></li>
+  </ul></li>
+  <li><a href="#多元分类-multi-class-classification-1" id="toc-多元分类-multi-class-classification-1" class="nav-link" data-scroll-target="#多元分类-multi-class-classification-1"><span class="header-section-number">4.8</span> 3.7 多元分类 (Multi-class Classification)</a>
+  <ul class="collapse">
+  <li><a href="#从二元到多元" id="toc-从二元到多元" class="nav-link" data-scroll-target="#从二元到多元"><span class="header-section-number">4.8.1</span> 🎯 从二元到多元</a></li>
+  <li><a href="#方法-1one-vs-rest-ovr" id="toc-方法-1one-vs-rest-ovr" class="nav-link" data-scroll-target="#方法-1one-vs-rest-ovr"><span class="header-section-number">4.8.2</span> 🔹 方法 1：One-vs-Rest (OvR)</a></li>
+  <li><a href="#方法-2softmax-regression" id="toc-方法-2softmax-regression" class="nav-link" data-scroll-target="#方法-2softmax-regression"><span class="header-section-number">4.8.3</span> 🔹 方法 2：Softmax Regression</a></li>
+  <li><a href="#cross-entropy-for-multi-class" id="toc-cross-entropy-for-multi-class" class="nav-link" data-scroll-target="#cross-entropy-for-multi-class"><span class="header-section-number">4.8.4</span> 📐 Cross Entropy for Multi-class</a></li>
+  <li><a href="#实现-softmax-regression" id="toc-实现-softmax-regression" class="nav-link" data-scroll-target="#实现-softmax-regression"><span class="header-section-number">4.8.5</span> 💻 实现 Softmax Regression</a></li>
+  </ul></li>
+  <li><a href="#实战-1信用卡欺诈检测" id="toc-实战-1信用卡欺诈检测" class="nav-link" data-scroll-target="#实战-1信用卡欺诈检测"><span class="header-section-number">4.9</span> 3.8 实战 1：信用卡欺诈检测</a>
+  <ul class="collapse">
+  <li><a href="#问题描述" id="toc-问题描述" class="nav-link" data-scroll-target="#问题描述"><span class="header-section-number">4.9.1</span> 📋 问题描述</a></li>
+  <li><a href="#类别不平衡问题" id="toc-类别不平衡问题" class="nav-link" data-scroll-target="#类别不平衡问题"><span class="header-section-number">4.9.2</span> ⚠️ 类别不平衡问题</a></li>
+  <li><a href="#处理方法" id="toc-处理方法" class="nav-link" data-scroll-target="#处理方法"><span class="header-section-number">4.9.3</span> 💡 处理方法</a></li>
+  <li><a href="#完整代码" id="toc-完整代码" class="nav-link" data-scroll-target="#完整代码"><span class="header-section-number">4.9.4</span> 💻 完整代码</a></li>
+  </ul></li>
+  <li><a href="#实战-2手写数字识别-mnist" id="toc-实战-2手写数字识别-mnist" class="nav-link" data-scroll-target="#实战-2手写数字识别-mnist"><span class="header-section-number">4.10</span> 3.9 实战 2：手写数字识别 (MNIST)</a>
+  <ul class="collapse">
+  <li><a href="#mnist-数据集" id="toc-mnist-数据集" class="nav-link" data-scroll-target="#mnist-数据集"><span class="header-section-number">4.10.1</span> 📋 MNIST 数据集</a></li>
+  <li><a href="#完整代码-1" id="toc-完整代码-1" class="nav-link" data-scroll-target="#完整代码-1"><span class="header-section-number">4.10.2</span> 💻 完整代码</a></li>
+  </ul></li>
+  <li><a href="#逻辑回归的优缺点" id="toc-逻辑回归的优缺点" class="nav-link" data-scroll-target="#逻辑回归的优缺点"><span class="header-section-number">4.11</span> 3.10 逻辑回归的优缺点</a>
+  <ul class="collapse">
+  <li><a href="#优点" id="toc-优点" class="nav-link" data-scroll-target="#优点"><span class="header-section-number">4.11.1</span> ✅ 优点</a></li>
+  <li><a href="#缺点" id="toc-缺点" class="nav-link" data-scroll-target="#缺点"><span class="header-section-number">4.11.2</span> ❌ 缺点</a></li>
+  </ul></li>
+  <li><a href="#本章作业" id="toc-本章作业" class="nav-link" data-scroll-target="#本章作业"><span class="header-section-number">4.12</span> 📝 本章作业</a>
+  <ul class="collapse">
+  <li><a href="#作业-1概念题" id="toc-作业-1概念题" class="nav-link" data-scroll-target="#作业-1概念题"><span class="header-section-number">4.12.1</span> 作业 1：概念题</a></li>
+  <li><a href="#作业-2编程实践" id="toc-作业-2编程实践" class="nav-link" data-scroll-target="#作业-2编程实践"><span class="header-section-number">4.12.2</span> 作业 2：编程实践</a></li>
+  <li><a href="#作业-3kaggle-竞赛" id="toc-作业-3kaggle-竞赛" class="nav-link" data-scroll-target="#作业-3kaggle-竞赛"><span class="header-section-number">4.12.3</span> 作业 3：Kaggle 竞赛</a></li>
+  </ul></li>
+  <li><a href="#本章关键概念总结" id="toc-本章关键概念总结" class="nav-link" data-scroll-target="#本章关键概念总结"><span class="header-section-number">4.13</span> 🔑 本章关键概念总结</a></li>
+  <li><a href="#下一章预告" id="toc-下一章预告" class="nav-link" data-scroll-target="#下一章预告"><span class="header-section-number">4.14</span> 🎯 下一章预告</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">第一部分：基础篇</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="章节目标" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="章节目标"><span class="header-section-number">4.1</span> 📌 章节目标</h2>
+<ul>
+<li>理解分类问题与回归问题的区别</li>
+<li>掌握逻辑回归的原理和实现</li>
+<li>学习 Sigmoid 和 Softmax 函数</li>
+<li>理解交叉熵损失函数</li>
+<li>实战：手写数字识别、信用卡欺诈检测</li>
+</ul>
+<hr>
+</section>
+<section id="什么是分类" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="什么是分类"><span class="header-section-number">4.2</span> 3.1 什么是分类？</h2>
+<section id="分类-vs-回归" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="分类-vs-回归"><span class="header-section-number">4.2.1</span> 🎯 分类 vs 回归</h3>
+<pre><code>回归 (Regression):
+  预测连续数值
+  例：房价 $350,000, 温度 25.3°C
+  输出：实数 ℝ
+
+分类 (Classification):
+  预测离散类别
+  例：猫/狗, 垃圾邮件/正常邮件
+  输出：类别标签</code></pre>
+</section>
+<section id="分类问题的类型" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="分类问题的类型"><span class="header-section-number">4.2.2</span> 📊 分类问题的类型</h3>
+<section id="二元分类-binary-classification" class="level4" data-number="4.2.2.1">
+<h4 data-number="4.2.2.1" class="anchored" data-anchor-id="二元分类-binary-classification"><span class="header-section-number">4.2.2.1</span> <strong>1. 二元分类 (Binary Classification)</strong></h4>
+<p>只有两个类别</p>
+<p><strong>例子</strong>： - 邮件：垃圾邮件 (1) / 正常邮件 (0) - 医学：有病 (1) / 没病 (0) - 信用卡：欺诈 (1) / 正常 (0) - 客户：会购买 (1) / 不会购买 (0)</p>
+</section>
+<section id="多元分类-multi-class-classification" class="level4" data-number="4.2.2.2">
+<h4 data-number="4.2.2.2" class="anchored" data-anchor-id="多元分类-multi-class-classification"><span class="header-section-number">4.2.2.2</span> <strong>2. 多元分类 (Multi-class Classification)</strong></h4>
+<p>多个类别（但只能属于一个）</p>
+<p><strong>例子</strong>： - 手写数字识别：0, 1, 2, …, 9 - 新闻分类：体育、政治、娱乐、科技 - 动物分类：猫、狗、鸟、鱼</p>
+</section>
+<section id="多标签分类-multi-label-classification" class="level4" data-number="4.2.2.3">
+<h4 data-number="4.2.2.3" class="anchored" data-anchor-id="多标签分类-multi-label-classification"><span class="header-section-number">4.2.2.3</span> <strong>3. 多标签分类 (Multi-label Classification)</strong></h4>
+<p>可以同时属于多个类别</p>
+<p><strong>例子</strong>： - 电影标签：[动作, 喜剧, 爱情] - 文章标签：[机器学习, Python, 深度学习]</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="为什么不能用线性回归做分类" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="为什么不能用线性回归做分类"><span class="header-section-number">4.3</span> 3.2 为什么不能用线性回归做分类？</h2>
+<section id="尝试用回归做分类" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="尝试用回归做分类"><span class="header-section-number">4.3.1</span> 🤔 尝试用回归做分类</h3>
+<p>假设我们要分类：猫 (0) / 狗 (1)</p>
+<pre><code>训练数据：
+x (特征) | y (标签)
+  1.0    |   0  (猫)
+  2.0    |   0  (猫)
+  3.0    |   1  (狗)
+  4.0    |   1  (狗)</code></pre>
+<p><strong>线性回归</strong>：<code>y = b + w·x</code></p>
+<pre><code>y
+↑
+1 |         ●  ●   (狗)
+  |       /
+  |     /
+0 |   ●  ●       (猫)
+  |_____________→ x</code></pre>
+<p>看起来还不错？</p>
+</section>
+<section id="问题来了" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="问题来了"><span class="header-section-number">4.3.2</span> ⚠️ 问题来了！</h3>
+<p><strong>新数据点</strong>：x = 10</p>
+<pre><code>y
+↑
+3 |               ●  (预测值 = 3？？)
+2 |             /
+1 |         ●  ●
+  |       /
+  |     /
+0 |   ●  ●
+  |_____________→ x
+            10</code></pre>
+<p><strong>问题</strong>： 1. 输出不是 0 或 1（可能是 3, -1, 0.7…） 2. 远离训练数据的点会影响决策边界 3. 无法表示概率</p>
+</section>
+<section id="我们需要什么" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="我们需要什么"><span class="header-section-number">4.3.3</span> 💡 我们需要什么？</h3>
+<pre><code>理想的分类器：
+  输出范围在 [0, 1]
+  可以解释为概率
+  0.9 → 90% 确定是狗
+  0.1 → 10% 确定是狗（90% 是猫）</code></pre>
+<hr>
+</section>
+</section>
+<section id="logistic-regression" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="logistic-regression"><span class="header-section-number">4.4</span> 3.3 Logistic Regression</h2>
+<section id="核心思想" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="核心思想"><span class="header-section-number">4.4.1</span> 🔹 核心思想</h3>
+<p><strong>改造线性回归</strong>：</p>
+<pre><code>Step 1: 计算线性组合
+  z = b + w·x
+
+Step 2: 通过 Sigmoid 函数压缩到 (0, 1)
+  y = σ(z) = 1 / (1 + e^(-z))</code></pre>
+</section>
+<section id="sigmoid-函数" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="sigmoid-函数"><span class="header-section-number">4.4.2</span> 📐 Sigmoid 函数</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sigmoid(z):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>z))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> sigmoid(z)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.plot(z, y, <span class="st">'b-'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'阈值 = 0.5'</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'g'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'z = b + wx'</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'σ(z)'</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Sigmoid Function'</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>图形</strong>：</p>
+<pre><code>σ(z)
+ 1 |         ______
+   |       /
+0.5|      * (z=0, σ=0.5)
+   |     /
+ 0 |____/
+   |_____________→ z
+  -10      0     10</code></pre>
+</section>
+<section id="sigmoid-的性质" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="sigmoid-的性质"><span class="header-section-number">4.4.3</span> 🔍 Sigmoid 的性质</h3>
+<pre><code>σ(z) = 1 / (1 + e^(-z))
+
+性质：
+1. 输出范围：(0, 1)
+2. σ(0) = 0.5 (中点)
+3. z → +∞, σ(z) → 1
+4. z → -∞, σ(z) → 0
+5. 关于 (0, 0.5) 中心对称
+6. 导数：σ'(z) = σ(z)·(1 - σ(z))</code></pre>
+</section>
+<section id="决策规则" class="level3" data-number="4.4.4">
+<h3 data-number="4.4.4" class="anchored" data-anchor-id="决策规则"><span class="header-section-number">4.4.4</span> 🎯 决策规则</h3>
+<pre><code>给定输入 x，计算：
+  z = b + w·x
+  P(y=1|x) = σ(z)
+
+决策：
+  如果 P(y=1|x) ≥ 0.5  → 预测为类别 1
+  如果 P(y=1|x) &lt; 0.5  → 预测为类别 0
+
+等价于：
+  如果 z ≥ 0  → 预测为类别 1
+  如果 z &lt; 0  → 预测为类别 0</code></pre>
+</section>
+<section id="决策边界-decision-boundary" class="level3" data-number="4.4.5">
+<h3 data-number="4.4.5" class="anchored" data-anchor-id="决策边界-decision-boundary"><span class="header-section-number">4.4.5</span> 📊 决策边界 (Decision Boundary)</h3>
+<p><strong>一维情况</strong>：</p>
+<pre><code>z = b + w·x = 0
+→ x = -b/w  (决策边界)
+
+例：b = -3, w = 1
+  x &lt; 3 → 预测类别 0
+  x &gt; 3 → 预测类别 1</code></pre>
+<p><strong>二维情况</strong>：</p>
+<pre><code>z = b + w₁x₁ + w₂x₂ = 0
+→ x₂ = -(b + w₁x₁)/w₂  (一条直线)
+
+x₂
+↑
+|     /
+|    /  类别 1
+|   /
+|  /_________ 决策边界
+| /
+|/ 类别 0
+|________→ x₁</code></pre>
+<hr>
+</section>
+</section>
+<section id="loss-function-for-classification" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="loss-function-for-classification"><span class="header-section-number">4.5</span> 3.4 Loss Function for Classification</h2>
+<section id="为什么不用-mse" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="为什么不用-mse"><span class="header-section-number">4.5.1</span> 🚫 为什么不用 MSE？</h3>
+<p><strong>尝试</strong>：<code>L = (y - σ(z))²</code></p>
+<p><strong>问题</strong>： 1. <strong>非凸函数</strong>：有很多局部最优解 2. <strong>梯度消失</strong>：当预测很错时，梯度反而很小</p>
+<pre><code>Loss
+ ↑
+ |  *     *
+ | / \   / \   多个局部最优！
+ |/   \_/   \
+ |___________→ w</code></pre>
+</section>
+<section id="cross-entropy-loss" class="level3" data-number="4.5.2">
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="cross-entropy-loss"><span class="header-section-number">4.5.2</span> ✅ Cross Entropy Loss</h3>
+<p><strong>公式</strong>：</p>
+<pre><code>对于单个样本：
+L(y, ŷ) = -[y·log(ŷ) + (1-y)·log(1-ŷ)]
+
+其中：
+  y ∈ {0, 1}     真实标签
+  ŷ = σ(z)       预测概率</code></pre>
+<p><strong>理解</strong>：</p>
+<pre><code>情况1：真实标签 y = 1
+  L = -log(ŷ)
+  如果 ŷ → 1 (预测正确)  → L → 0   (损失小)
+  如果 ŷ → 0 (预测错误)  → L → ∞   (损失大)
+
+情况2：真实标签 y = 0
+  L = -log(1-ŷ)
+  如果 ŷ → 0 (预测正确)  → L → 0   (损失小)
+  如果 ŷ → 1 (预测错误)  → L → ∞   (损失大)</code></pre>
+</section>
+<section id="可视化-cross-entropy" class="level3" data-number="4.5.3">
+<h3 data-number="4.5.3" class="anchored" data-anchor-id="可视化-cross-entropy"><span class="header-section-number">4.5.3</span> 📊 可视化 Cross Entropy</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> np.linspace(<span class="fl">0.01</span>, <span class="fl">0.99</span>, <span class="dv">100</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># y = 1 时的损失</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>loss_y1 <span class="op">=</span> <span class="op">-</span>np.log(y_pred)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># y = 0 时的损失</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>loss_y0 <span class="op">=</span> <span class="op">-</span>np.log(<span class="dv">1</span> <span class="op">-</span> y_pred)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plt.plot(y_pred, loss_y1, <span class="st">'b-'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'真实标签 y = 1'</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'预测概率 ŷ'</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Loss = -log(ŷ)'</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>plt.plot(y_pred, loss_y0, <span class="st">'r-'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'真实标签 y = 0'</span>)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'预测概率 ŷ'</span>)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Loss = -log(1-ŷ)'</span>)</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="完整的-loss-function" class="level3" data-number="4.5.4">
+<h3 data-number="4.5.4" class="anchored" data-anchor-id="完整的-loss-function"><span class="header-section-number">4.5.4</span> 🧮 完整的 Loss Function</h3>
+<p>对于 N 个训练样本：</p>
+<pre><code>L(w, b) = -(1/N) Σ[yⁿ·log(ŷⁿ) + (1-yⁿ)·log(1-ŷⁿ)]
+
+其中：
+  ŷⁿ = σ(b + w·xⁿ)</code></pre>
+<hr>
+</section>
+</section>
+<section id="梯度下降求解" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="梯度下降求解"><span class="header-section-number">4.6</span> 3.5 梯度下降求解</h2>
+<section id="计算梯度" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="计算梯度"><span class="header-section-number">4.6.1</span> 📐 计算梯度</h3>
+<pre><code>ŷ = σ(z) = σ(b + w·x)
+
+L = -[y·log(ŷ) + (1-y)·log(1-ŷ)]
+
+求导（链式法则）：
+
+∂L/∂w = (ŷ - y)·x
+∂L/∂b = (ŷ - y)
+
+惊喜！形式和线性回归一样简单！</code></pre>
+</section>
+<section id="从零实现-logistic-regression" class="level3" data-number="4.6.2">
+<h3 data-number="4.6.2" class="anchored" data-anchor-id="从零实现-logistic-regression"><span class="header-section-number">4.6.2</span> 💻 从零实现 Logistic Regression</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LogisticRegression:</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, learning_rate<span class="op">=</span><span class="fl">0.01</span>, epochs<span class="op">=</span><span class="dv">1000</span>):</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lr <span class="op">=</span> learning_rate</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.epochs <span class="op">=</span> epochs</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.w <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.losses <span class="op">=</span> []</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> sigmoid(<span class="va">self</span>, z):</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""Sigmoid 函数"""</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>z))</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y):</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""训练模型"""</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        n_samples, n_features <span class="op">=</span> X.shape</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 初始化参数</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.w <span class="op">=</span> np.zeros(n_features)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 梯度下降</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.epochs):</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 前向传播</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> np.dot(X, <span class="va">self</span>.w) <span class="op">+</span> <span class="va">self</span>.b</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>            y_pred <span class="op">=</span> <span class="va">self</span>.sigmoid(z)</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 计算损失</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> <span class="op">-</span>np.mean(y <span class="op">*</span> np.log(y_pred <span class="op">+</span> <span class="fl">1e-9</span>) <span class="op">+</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>                           (<span class="dv">1</span> <span class="op">-</span> y) <span class="op">*</span> np.log(<span class="dv">1</span> <span class="op">-</span> y_pred <span class="op">+</span> <span class="fl">1e-9</span>))</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.losses.append(loss)</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 计算梯度</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>            dw <span class="op">=</span> np.dot(X.T, (y_pred <span class="op">-</span> y)) <span class="op">/</span> n_samples</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>            db <span class="op">=</span> np.mean(y_pred <span class="op">-</span> y)</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 更新参数</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.w <span class="op">-=</span> <span class="va">self</span>.lr <span class="op">*</span> dw</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.b <span class="op">-=</span> <span class="va">self</span>.lr <span class="op">*</span> db</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 打印进度</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> epoch <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">: Loss = </span><span class="sc">{</span>loss<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> predict_proba(<span class="va">self</span>, X):</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""预测概率"""</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> np.dot(X, <span class="va">self</span>.w) <span class="op">+</span> <span class="va">self</span>.b</span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.sigmoid(z)</span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> predict(<span class="va">self</span>, X, threshold<span class="op">=</span><span class="fl">0.5</span>):</span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""预测类别"""</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>        proba <span class="op">=</span> <span class="va">self</span>.predict_proba(X)</span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (proba <span class="op">&gt;=</span> threshold).astype(<span class="bu">int</span>)</span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用示例</span></span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 生成模拟数据</span></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 类别 0</span></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a>    X0 <span class="op">=</span> np.random.randn(<span class="dv">100</span>, <span class="dv">2</span>) <span class="op">+</span> np.array([<span class="dv">2</span>, <span class="dv">2</span>])</span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a>    y0 <span class="op">=</span> np.zeros(<span class="dv">100</span>)</span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 类别 1</span></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a>    X1 <span class="op">=</span> np.random.randn(<span class="dv">100</span>, <span class="dv">2</span>) <span class="op">+</span> np.array([<span class="dv">5</span>, <span class="dv">5</span>])</span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a>    y1 <span class="op">=</span> np.ones(<span class="dv">100</span>)</span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 合并</span></span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.vstack([X0, X1])</span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> np.hstack([y0, y1])</span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 训练</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> LogisticRegression(learning_rate<span class="op">=</span><span class="fl">0.1</span>, epochs<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a>    model.fit(X, y)</span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 预测</span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a>    predictions <span class="op">=</span> model.predict(X)</span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a>    accuracy <span class="op">=</span> np.mean(predictions <span class="op">==</span> y)</span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">准确率: </span><span class="sc">{</span>accuracy<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>输出</strong>：</p>
+<pre><code>Epoch 0: Loss = 0.6931
+Epoch 100: Loss = 0.2156
+Epoch 200: Loss = 0.1398
+Epoch 300: Loss = 0.1045
+Epoch 400: Loss = 0.0850
+Epoch 500: Loss = 0.0722
+Epoch 600: Loss = 0.0632
+Epoch 700: Loss = 0.0565
+Epoch 800: Loss = 0.0513
+Epoch 900: Loss = 0.0472
+
+准确率: 1.0000</code></pre>
+</section>
+<section id="可视化决策边界" class="level3" data-number="4.6.3">
+<h3 data-number="4.6.3" class="anchored" data-anchor-id="可视化决策边界"><span class="header-section-number">4.6.3</span> 📊 可视化决策边界</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_decision_boundary(model, X, y):</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 创建网格</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    x1_min, x1_max <span class="op">=</span> X[:, <span class="dv">0</span>].<span class="bu">min</span>() <span class="op">-</span> <span class="dv">1</span>, X[:, <span class="dv">0</span>].<span class="bu">max</span>() <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    x2_min, x2_max <span class="op">=</span> X[:, <span class="dv">1</span>].<span class="bu">min</span>() <span class="op">-</span> <span class="dv">1</span>, X[:, <span class="dv">1</span>].<span class="bu">max</span>() <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    xx1, xx2 <span class="op">=</span> np.meshgrid(</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        np.linspace(x1_min, x1_max, <span class="dv">100</span>),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        np.linspace(x2_min, x2_max, <span class="dv">100</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 预测每个网格点</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> model.predict(np.c_[xx1.ravel(), xx2.ravel()])</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> Z.reshape(xx1.shape)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 绘图</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    plt.contourf(xx1, xx2, Z, alpha<span class="op">=</span><span class="fl">0.3</span>, cmap<span class="op">=</span><span class="st">'RdYlBu'</span>)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    plt.contour(xx1, xx2, Z, levels<span class="op">=</span>[<span class="fl">0.5</span>], colors<span class="op">=</span><span class="st">'black'</span>, linewidths<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 绘制数据点</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    plt.scatter(X[y<span class="op">==</span><span class="dv">0</span>, <span class="dv">0</span>], X[y<span class="op">==</span><span class="dv">0</span>, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'类别 0'</span>,</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>                edgecolors<span class="op">=</span><span class="st">'k'</span>, s<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    plt.scatter(X[y<span class="op">==</span><span class="dv">1</span>, <span class="dv">0</span>], X[y<span class="op">==</span><span class="dv">1</span>, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="st">'类别 1'</span>,</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>                edgecolors<span class="op">=</span><span class="st">'k'</span>, s<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'特征 1'</span>)</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'特征 2'</span>)</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">'逻辑回归决策边界'</span>)</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>plot_decision_boundary(model, X, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="评估分类模型" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="评估分类模型"><span class="header-section-number">4.7</span> 3.6 评估分类模型</h2>
+<section id="confusion-matrix-混淆矩阵" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="confusion-matrix-混淆矩阵"><span class="header-section-number">4.7.1</span> 📊 Confusion Matrix (混淆矩阵)</h3>
+<pre><code>                预测
+              0      1
+真   0      TN     FP
+实   1      FN     TP
+
+TN (True Negative):  正确预测为负类
+TP (True Positive):  正确预测为正类
+FN (False Negative): 错误预测为负类（漏报）
+FP (False Positive): 错误预测为正类（误报）</code></pre>
+<p><strong>例子</strong>：癌症检测</p>
+<pre><code>                预测
+           没病    有病
+真 没病    90      10    (10个假阳性)
+实 有病     5      95    (5个假阴性)</code></pre>
+</section>
+<section id="评估指标" class="level3" data-number="4.7.2">
+<h3 data-number="4.7.2" class="anchored" data-anchor-id="评估指标"><span class="header-section-number">4.7.2</span> 🔢 评估指标</h3>
+<section id="accuracy-准确率" class="level4" data-number="4.7.2.1">
+<h4 data-number="4.7.2.1" class="anchored" data-anchor-id="accuracy-准确率"><span class="header-section-number">4.7.2.1</span> <strong>1. Accuracy (准确率)</strong></h4>
+<pre><code>Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+= 正确预测的数量 / 总数量
+
+例：(90 + 95) / 200 = 0.925 = 92.5%</code></pre>
+<p><strong>问题</strong>：类别不平衡时会误导</p>
+<pre><code>例：100个样本，95个负类，5个正类
+如果全部预测为负类：
+  Accuracy = 95/100 = 95%  (看起来很好！)
+  但完全没有检测到正类！</code></pre>
+</section>
+<section id="precision-精确率" class="level4" data-number="4.7.2.2">
+<h4 data-number="4.7.2.2" class="anchored" data-anchor-id="precision-精确率"><span class="header-section-number">4.7.2.2</span> <strong>2. Precision (精确率)</strong></h4>
+<pre><code>Precision = TP / (TP + FP)
+
+= 预测为正类中，真正是正类的比例
+
+例：95 / (95 + 10) = 0.905 = 90.5%
+
+理解：在我说"有病"的人中，真的有病的比例</code></pre>
+<p><strong>使用场景</strong>：当 <strong>误报代价高</strong> 时 - 垃圾邮件过滤：不要把正常邮件标记为垃圾邮件 - 信用卡欺诈：不要误报正常交易</p>
+</section>
+<section id="recall-召回率-灵敏度" class="level4" data-number="4.7.2.3">
+<h4 data-number="4.7.2.3" class="anchored" data-anchor-id="recall-召回率-灵敏度"><span class="header-section-number">4.7.2.3</span> <strong>3. Recall (召回率 / 灵敏度)</strong></h4>
+<pre><code>Recall = TP / (TP + FN)
+
+= 真正的正类中，被正确预测的比例
+
+例：95 / (95 + 5) = 0.95 = 95%
+
+理解：所有真正有病的人中，被检测出来的比例</code></pre>
+<p><strong>使用场景</strong>：当 <strong>漏报代价高</strong> 时 - 疾病检测：不能漏掉真正的病人 - 欺诈检测：不能漏掉真正的欺诈</p>
+</section>
+<section id="f1-score" class="level4" data-number="4.7.2.4">
+<h4 data-number="4.7.2.4" class="anchored" data-anchor-id="f1-score"><span class="header-section-number">4.7.2.4</span> <strong>4. F1 Score</strong></h4>
+<pre><code>F1 = 2 · (Precision · Recall) / (Precision + Recall)
+
+= Precision 和 Recall 的调和平均数
+
+例：2 · (0.905 · 0.95) / (0.905 + 0.95) = 0.927</code></pre>
+<p><strong>特点</strong>：平衡 Precision 和 Recall</p>
+</section>
+<section id="roc-曲线和-auc" class="level4" data-number="4.7.2.5">
+<h4 data-number="4.7.2.5" class="anchored" data-anchor-id="roc-曲线和-auc"><span class="header-section-number">4.7.2.5</span> <strong>5. ROC 曲线和 AUC</strong></h4>
+<p><strong>ROC (Receiver Operating Characteristic) 曲线</strong>：</p>
+<pre><code>TPR (True Positive Rate) = Recall = TP/(TP+FN)
+FPR (False Positive Rate) = FP/(FP+TN)
+
+横轴：FPR (假阳性率)
+纵轴：TPR (真阳性率)</code></pre>
+<p><strong>AUC (Area Under Curve)</strong>：ROC 曲线下面积 - AUC = 1: 完美分类器 - AUC = 0.5: 随机猜测 - AUC &gt; 0.8: 通常认为不错</p>
+</section>
+</section>
+<section id="计算评估指标" class="level3" data-number="4.7.3">
+<h3 data-number="4.7.3" class="anchored" data-anchor-id="计算评估指标"><span class="header-section-number">4.7.3</span> 💻 计算评估指标</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    accuracy_score,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    precision_score,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    recall_score,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    f1_score,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    confusion_matrix,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    classification_report,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    roc_curve,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    roc_auc_score</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 预测</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X)</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>y_proba <span class="op">=</span> model.predict_proba(X)</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 混淆矩阵</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y, y_pred)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"混淆矩阵："</span>)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cm)</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 基本指标</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>accuracy <span class="op">=</span> accuracy_score(y, y_pred)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>precision <span class="op">=</span> precision_score(y, y_pred)</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>recall <span class="op">=</span> recall_score(y, y_pred)</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> f1_score(y, y_pred)</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Accuracy:  </span><span class="sc">{</span>accuracy<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precision: </span><span class="sc">{</span>precision<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Recall:    </span><span class="sc">{</span>recall<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"F1 Score:  </span><span class="sc">{</span>f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 完整报告</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">分类报告："</span>)</span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y, y_pred,</span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>                           target_names<span class="op">=</span>[<span class="st">'类别0'</span>, <span class="st">'类别1'</span>]))</span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. ROC 曲线</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a>fpr, tpr, thresholds <span class="op">=</span> roc_curve(y, y_proba)</span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>auc <span class="op">=</span> roc_auc_score(y, y_proba)</span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>plt.plot(fpr, tpr, <span class="st">'b-'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="ss">f'ROC (AUC = </span><span class="sc">{</span>auc<span class="sc">:.3f}</span><span class="ss">)'</span>)</span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>], <span class="st">'r--'</span>, label<span class="op">=</span><span class="st">'随机猜测'</span>)</span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'False Positive Rate'</span>)</span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'True Positive Rate'</span>)</span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'ROC Curve'</span>)</span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Precision-Recall 曲线</span></span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_recall_curve</span>
+<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a>precision_vals, recall_vals, _ <span class="op">=</span> precision_recall_curve(y, y_proba)</span>
+<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a>plt.plot(recall_vals, precision_vals, <span class="st">'b-'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Recall'</span>)</span>
+<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Precision'</span>)</span>
+<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Precision-Recall Curve'</span>)</span>
+<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="多元分类-multi-class-classification-1" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="多元分类-multi-class-classification-1"><span class="header-section-number">4.8</span> 3.7 多元分类 (Multi-class Classification)</h2>
+<section id="从二元到多元" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="从二元到多元"><span class="header-section-number">4.8.1</span> 🎯 从二元到多元</h3>
+<p><strong>问题</strong>：手写数字识别 (0-9)，共 10 个类别</p>
+</section>
+<section id="方法-1one-vs-rest-ovr" class="level3" data-number="4.8.2">
+<h3 data-number="4.8.2" class="anchored" data-anchor-id="方法-1one-vs-rest-ovr"><span class="header-section-number">4.8.2</span> 🔹 方法 1：One-vs-Rest (OvR)</h3>
+<p><strong>策略</strong>：训练 K 个二元分类器</p>
+<pre><code>分类器 1: 类别 0 vs 其他
+分类器 2: 类别 1 vs 其他
+...
+分类器 K: 类别 K-1 vs 其他
+
+预测时：选择输出概率最大的分类器</code></pre>
+<p><strong>例子</strong>：识别数字 3</p>
+<pre><code>分类器 1 (0 vs 其他): P = 0.05
+分类器 2 (1 vs 其他): P = 0.10
+分类器 3 (2 vs 其他): P = 0.08
+分类器 4 (3 vs 其他): P = 0.95  ✓ 最大
+...
+分类器 10 (9 vs 其他): P = 0.03
+
+→ 预测为类别 3</code></pre>
+</section>
+<section id="方法-2softmax-regression" class="level3" data-number="4.8.3">
+<h3 data-number="4.8.3" class="anchored" data-anchor-id="方法-2softmax-regression"><span class="header-section-number">4.8.3</span> 🔹 方法 2：Softmax Regression</h3>
+<p><strong>核心思想</strong>：扩展 Sigmoid 到多个类别</p>
+<section id="softmax-函数" class="level4" data-number="4.8.3.1">
+<h4 data-number="4.8.3.1" class="anchored" data-anchor-id="softmax-函数"><span class="header-section-number">4.8.3.1</span> Softmax 函数</h4>
+<pre><code>给定 K 个类别，计算 K 个分数：
+
+z₁ = b₁ + w₁ᵀx
+z₂ = b₂ + w₂ᵀx
+...
+zₖ = bₖ + wₖᵀx
+
+Softmax:
+P(y=i|x) = e^(zᵢ) / Σⱼ e^(zⱼ)
+
+性质：
+1. 所有概率和为 1: Σᵢ P(y=i|x) = 1
+2. 每个概率都在 (0, 1)
+3. 如果 K=2，退化为 Sigmoid</code></pre>
+</section>
+<section id="可视化理解" class="level4" data-number="4.8.3.2">
+<h4 data-number="4.8.3.2" class="anchored" data-anchor-id="可视化理解"><span class="header-section-number">4.8.3.2</span> 可视化理解</h4>
+<pre><code>例：3个类别
+
+z₁ = 2.0    →  e^2.0 = 7.39
+z₂ = 1.0    →  e^1.0 = 2.72
+z₃ = 0.1    →  e^0.1 = 1.11
+                ________
+                Sum = 11.22
+
+P(y=1) = 7.39/11.22 = 0.659  (65.9%)
+P(y=2) = 2.72/11.22 = 0.242  (24.2%)
+P(y=3) = 1.11/11.22 = 0.099  (9.9%)
+
+预测：类别 1 (概率最高)</code></pre>
+</section>
+</section>
+<section id="cross-entropy-for-multi-class" class="level3" data-number="4.8.4">
+<h3 data-number="4.8.4" class="anchored" data-anchor-id="cross-entropy-for-multi-class"><span class="header-section-number">4.8.4</span> 📐 Cross Entropy for Multi-class</h3>
+<pre><code>对于单个样本：
+L = -Σᵢ yᵢ·log(ŷᵢ)
+
+其中：
+  yᵢ: one-hot 编码的真实标签
+  ŷᵢ: softmax 输出的预测概率
+
+例：真实类别是 2 (共3个类别)
+y = [0, 1, 0]       (one-hot)
+ŷ = [0.1, 0.7, 0.2]  (预测)
+
+L = -(0·log(0.1) + 1·log(0.7) + 0·log(0.2))
+  = -log(0.7)
+  = 0.357</code></pre>
+</section>
+<section id="实现-softmax-regression" class="level3" data-number="4.8.5">
+<h3 data-number="4.8.5" class="anchored" data-anchor-id="实现-softmax-regression"><span class="header-section-number">4.8.5</span> 💻 实现 Softmax Regression</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SoftmaxRegression:</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, learning_rate<span class="op">=</span><span class="fl">0.01</span>, epochs<span class="op">=</span><span class="dv">1000</span>):</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lr <span class="op">=</span> learning_rate</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.epochs <span class="op">=</span> epochs</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.W <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> softmax(<span class="va">self</span>, z):</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""Softmax 函数"""</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 减去最大值防止数值溢出</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>        exp_z <span class="op">=</span> np.exp(z <span class="op">-</span> np.<span class="bu">max</span>(z, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> exp_z <span class="op">/</span> np.<span class="bu">sum</span>(exp_z, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y):</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""训练模型"""</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>        n_samples, n_features <span class="op">=</span> X.shape</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>        n_classes <span class="op">=</span> <span class="bu">len</span>(np.unique(y))</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># One-hot 编码标签</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>        y_onehot <span class="op">=</span> np.eye(n_classes)[y]</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 初始化参数</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.W <span class="op">=</span> np.random.randn(n_features, n_classes) <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> np.zeros(n_classes)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 梯度下降</span></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.epochs):</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 前向传播</span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> np.dot(X, <span class="va">self</span>.W) <span class="op">+</span> <span class="va">self</span>.b</span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>            y_pred <span class="op">=</span> <span class="va">self</span>.softmax(z)</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 计算损失</span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> <span class="op">-</span>np.mean(np.<span class="bu">sum</span>(y_onehot <span class="op">*</span> np.log(y_pred <span class="op">+</span> <span class="fl">1e-9</span>), axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 计算梯度</span></span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>            dz <span class="op">=</span> y_pred <span class="op">-</span> y_onehot</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>            dW <span class="op">=</span> np.dot(X.T, dz) <span class="op">/</span> n_samples</span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>            db <span class="op">=</span> np.mean(dz, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 更新参数</span></span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.W <span class="op">-=</span> <span class="va">self</span>.lr <span class="op">*</span> dW</span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.b <span class="op">-=</span> <span class="va">self</span>.lr <span class="op">*</span> db</span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> epoch <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a>                accuracy <span class="op">=</span> np.mean(np.argmax(y_pred, axis<span class="op">=</span><span class="dv">1</span>) <span class="op">==</span> y)</span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">: Loss = </span><span class="sc">{</span>loss<span class="sc">:.4f}</span><span class="ss">, Acc = </span><span class="sc">{</span>accuracy<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> predict_proba(<span class="va">self</span>, X):</span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""预测概率"""</span></span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> np.dot(X, <span class="va">self</span>.W) <span class="op">+</span> <span class="va">self</span>.b</span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.softmax(z)</span>
+<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-55"><a href="#cb36-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> predict(<span class="va">self</span>, X):</span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""预测类别"""</span></span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a>        proba <span class="op">=</span> <span class="va">self</span>.predict_proba(X)</span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.argmax(proba, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用示例</span></span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> sklearn.datasets <span class="im">import</span> load_iris</span>
+<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb36-64"><a href="#cb36-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-65"><a href="#cb36-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 加载鸢尾花数据集（3个类别）</span></span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a>    iris <span class="op">=</span> load_iris()</span>
+<span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a>    X, y <span class="op">=</span> iris.data, iris.target</span>
+<span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 分割数据</span></span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a>    X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a>        X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 训练</span></span>
+<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> SoftmaxRegression(learning_rate<span class="op">=</span><span class="fl">0.1</span>, epochs<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb36-76"><a href="#cb36-76" aria-hidden="true" tabindex="-1"></a>    model.fit(X_train, y_train)</span>
+<span id="cb36-77"><a href="#cb36-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-78"><a href="#cb36-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 测试</span></span>
+<span id="cb36-79"><a href="#cb36-79" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb36-80"><a href="#cb36-80" aria-hidden="true" tabindex="-1"></a>    accuracy <span class="op">=</span> np.mean(y_pred <span class="op">==</span> y_test)</span>
+<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">测试集准确率: </span><span class="sc">{</span>accuracy<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="实战-1信用卡欺诈检测" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="实战-1信用卡欺诈检测"><span class="header-section-number">4.9</span> 3.8 实战 1：信用卡欺诈检测</h2>
+<section id="问题描述" class="level3" data-number="4.9.1">
+<h3 data-number="4.9.1" class="anchored" data-anchor-id="问题描述"><span class="header-section-number">4.9.1</span> 📋 问题描述</h3>
+<p><strong>数据集</strong>：Kaggle Credit Card Fraud Detection - 284,807 笔交易记录 - 492 笔欺诈（0.172%）← 极度不平衡！ - 30 个特征（PCA 处理过，已脱敏）</p>
+</section>
+<section id="类别不平衡问题" class="level3" data-number="4.9.2">
+<h3 data-number="4.9.2" class="anchored" data-anchor-id="类别不平衡问题"><span class="header-section-number">4.9.2</span> ⚠️ 类别不平衡问题</h3>
+<pre><code>正常交易: 284,315  (99.83%)
+欺诈交易:     492  (0.17%)
+
+如果全部预测为"正常"：
+  Accuracy = 99.83%  (看起来很高！)
+  但完全没有检测到欺诈！</code></pre>
+</section>
+<section id="处理方法" class="level3" data-number="4.9.3">
+<h3 data-number="4.9.3" class="anchored" data-anchor-id="处理方法"><span class="header-section-number">4.9.3</span> 💡 处理方法</h3>
+<section id="方法-1重采样" class="level4" data-number="4.9.3.1">
+<h4 data-number="4.9.3.1" class="anchored" data-anchor-id="方法-1重采样"><span class="header-section-number">4.9.3.1</span> <strong>方法 1：重采样</strong></h4>
+<p><strong>欠采样 (Under-sampling)</strong>：</p>
+<pre><code>减少多数类样本
+正常: 284,315 → 492
+欺诈:     492 → 492
+
+优点：平衡数据集
+缺点：丢失大量信息</code></pre>
+<p><strong>过采样 (Over-sampling)</strong>：</p>
+<pre><code>增加少数类样本（复制或生成）
+正常: 284,315 → 284,315
+欺诈:     492 → 284,315
+
+优点：保留所有信息
+缺点：可能过拟合</code></pre>
+<p><strong>SMOTE (Synthetic Minority Over-sampling)</strong>：</p>
+<pre><code>合成新的少数类样本
+不是简单复制，而是在特征空间中插值生成</code></pre>
+</section>
+<section id="方法-2调整类别权重" class="level4" data-number="4.9.3.2">
+<h4 data-number="4.9.3.2" class="anchored" data-anchor-id="方法-2调整类别权重"><span class="header-section-number">4.9.3.2</span> <strong>方法 2：调整类别权重</strong></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 自动计算权重</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LogisticRegression(class_weight<span class="op">=</span><span class="st">'balanced'</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 手动设置</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LogisticRegression(class_weight<span class="op">=</span>{<span class="dv">0</span>: <span class="dv">1</span>, <span class="dv">1</span>: <span class="dv">100</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="方法-3调整决策阈值" class="level4" data-number="4.9.3.3">
+<h4 data-number="4.9.3.3" class="anchored" data-anchor-id="方法-3调整决策阈值"><span class="header-section-number">4.9.3.3</span> <strong>方法 3：调整决策阈值</strong></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 默认阈值 0.5</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> (y_proba <span class="op">&gt;=</span> <span class="fl">0.5</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 降低阈值，提高召回率</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> (y_proba <span class="op">&gt;=</span> <span class="fl">0.3</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 提高阈值，提高精确率</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> (y_proba <span class="op">&gt;=</span> <span class="fl">0.7</span>).astype(<span class="bu">int</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="方法-4使用适当的评估指标" class="level4" data-number="4.9.3.4">
+<h4 data-number="4.9.3.4" class="anchored" data-anchor-id="方法-4使用适当的评估指标"><span class="header-section-number">4.9.3.4</span> <strong>方法 4：使用适当的评估指标</strong></h4>
+<pre><code>不要用 Accuracy！
+应该用：
+  - F1 Score
+  - Precision-Recall AUC
+  - ROC AUC</code></pre>
+</section>
+</section>
+<section id="完整代码" class="level3" data-number="4.9.4">
+<h3 data-number="4.9.4" class="anchored" data-anchor-id="完整代码"><span class="header-section-number">4.9.4</span> 💻 完整代码</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    classification_report,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    confusion_matrix,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    roc_auc_score,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>    precision_recall_curve</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> imblearn.over_sampling <span class="im">import</span> SMOTE</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 加载数据</span></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'creditcard.csv'</span>)</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"数据形状:"</span>, df.shape)</span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">类别分布:"</span>)</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'Class'</span>].value_counts())</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">欺诈比例: </span><span class="sc">{</span>df[<span class="st">'Class'</span>]<span class="sc">.</span>mean()<span class="sc">:.4%}</span><span class="ss">"</span>)</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 准备数据</span></span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.drop(<span class="st">'Class'</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">'Class'</span>]</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 分割数据</span></span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>y</span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 特征缩放</span></span>
+<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a>X_train_scaled <span class="op">=</span> scaler.fit_transform(X_train)</span>
+<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a>X_test_scaled <span class="op">=</span> scaler.transform(X_test)</span>
+<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-38"><a href="#cb44-38" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 处理不平衡：SMOTE</span></span>
+<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a>smote <span class="op">=</span> SMOTE(random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a>X_train_resampled, y_train_resampled <span class="op">=</span> smote.fit_resample(</span>
+<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a>    X_train_scaled, y_train</span>
+<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">SMOTE 前: </span><span class="sc">{</span><span class="bu">len</span>(y_train)<span class="sc">}</span><span class="ss"> 样本"</span>)</span>
+<span id="cb44-45"><a href="#cb44-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"SMOTE 后: </span><span class="sc">{</span><span class="bu">len</span>(y_train_resampled)<span class="sc">}</span><span class="ss"> 样本"</span>)</span>
+<span id="cb44-46"><a href="#cb44-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"新的类别分布:</span><span class="ch">\n</span><span class="sc">{</span>pd<span class="sc">.</span>Series(y_train_resampled)<span class="sc">.</span>value_counts()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb44-47"><a href="#cb44-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-48"><a href="#cb44-48" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 训练模型</span></span>
+<span id="cb44-49"><a href="#cb44-49" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb44-50"><a href="#cb44-50" aria-hidden="true" tabindex="-1"></a>model.fit(X_train_resampled, y_train_resampled)</span>
+<span id="cb44-51"><a href="#cb44-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-52"><a href="#cb44-52" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. 预测</span></span>
+<span id="cb44-53"><a href="#cb44-53" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test_scaled)</span>
+<span id="cb44-54"><a href="#cb44-54" aria-hidden="true" tabindex="-1"></a>y_proba <span class="op">=</span> model.predict_proba(X_test_scaled)[:, <span class="dv">1</span>]</span>
+<span id="cb44-55"><a href="#cb44-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-56"><a href="#cb44-56" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. 评估</span></span>
+<span id="cb44-57"><a href="#cb44-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">混淆矩阵:"</span>)</span>
+<span id="cb44-58"><a href="#cb44-58" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, y_pred)</span>
+<span id="cb44-59"><a href="#cb44-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cm)</span>
+<span id="cb44-60"><a href="#cb44-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-61"><a href="#cb44-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">分类报告:"</span>)</span>
+<span id="cb44-62"><a href="#cb44-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred,</span>
+<span id="cb44-63"><a href="#cb44-63" aria-hidden="true" tabindex="-1"></a>                           target_names<span class="op">=</span>[<span class="st">'正常'</span>, <span class="st">'欺诈'</span>]))</span>
+<span id="cb44-64"><a href="#cb44-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-65"><a href="#cb44-65" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">ROC AUC: </span><span class="sc">{</span>roc_auc_score(y_test, y_proba)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb44-66"><a href="#cb44-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-67"><a href="#cb44-67" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. 可视化混淆矩阵</span></span>
+<span id="cb44-68"><a href="#cb44-68" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb44-69"><a href="#cb44-69" aria-hidden="true" tabindex="-1"></a>sns.heatmap(cm, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'d'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb44-70"><a href="#cb44-70" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'预测标签'</span>)</span>
+<span id="cb44-71"><a href="#cb44-71" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'真实标签'</span>)</span>
+<span id="cb44-72"><a href="#cb44-72" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'混淆矩阵'</span>)</span>
+<span id="cb44-73"><a href="#cb44-73" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb44-74"><a href="#cb44-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-75"><a href="#cb44-75" aria-hidden="true" tabindex="-1"></a><span class="co"># 10. Precision-Recall 曲线</span></span>
+<span id="cb44-76"><a href="#cb44-76" aria-hidden="true" tabindex="-1"></a>precision, recall, thresholds <span class="op">=</span> precision_recall_curve(y_test, y_proba)</span>
+<span id="cb44-77"><a href="#cb44-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-78"><a href="#cb44-78" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb44-79"><a href="#cb44-79" aria-hidden="true" tabindex="-1"></a>plt.plot(thresholds, precision[:<span class="op">-</span><span class="dv">1</span>], <span class="st">'b-'</span>, label<span class="op">=</span><span class="st">'Precision'</span>)</span>
+<span id="cb44-80"><a href="#cb44-80" aria-hidden="true" tabindex="-1"></a>plt.plot(thresholds, recall[:<span class="op">-</span><span class="dv">1</span>], <span class="st">'r-'</span>, label<span class="op">=</span><span class="st">'Recall'</span>)</span>
+<span id="cb44-81"><a href="#cb44-81" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'阈值'</span>)</span>
+<span id="cb44-82"><a href="#cb44-82" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'分数'</span>)</span>
+<span id="cb44-83"><a href="#cb44-83" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Precision vs Recall vs 阈值'</span>)</span>
+<span id="cb44-84"><a href="#cb44-84" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb44-85"><a href="#cb44-85" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb44-86"><a href="#cb44-86" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb44-87"><a href="#cb44-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-88"><a href="#cb44-88" aria-hidden="true" tabindex="-1"></a><span class="co"># 11. 找最优阈值</span></span>
+<span id="cb44-89"><a href="#cb44-89" aria-hidden="true" tabindex="-1"></a>f1_scores <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> (precision <span class="op">*</span> recall) <span class="op">/</span> (precision <span class="op">+</span> recall <span class="op">+</span> <span class="fl">1e-9</span>)</span>
+<span id="cb44-90"><a href="#cb44-90" aria-hidden="true" tabindex="-1"></a>optimal_idx <span class="op">=</span> np.argmax(f1_scores[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb44-91"><a href="#cb44-91" aria-hidden="true" tabindex="-1"></a>optimal_threshold <span class="op">=</span> thresholds[optimal_idx]</span>
+<span id="cb44-92"><a href="#cb44-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-93"><a href="#cb44-93" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">最优阈值: </span><span class="sc">{</span>optimal_threshold<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb44-94"><a href="#cb44-94" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"对应 F1 Score: </span><span class="sc">{</span>f1_scores[optimal_idx]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb44-95"><a href="#cb44-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-96"><a href="#cb44-96" aria-hidden="true" tabindex="-1"></a><span class="co"># 12. 使用最优阈值重新预测</span></span>
+<span id="cb44-97"><a href="#cb44-97" aria-hidden="true" tabindex="-1"></a>y_pred_optimal <span class="op">=</span> (y_proba <span class="op">&gt;=</span> optimal_threshold).astype(<span class="bu">int</span>)</span>
+<span id="cb44-98"><a href="#cb44-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-99"><a href="#cb44-99" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">使用最优阈值的结果:"</span>)</span>
+<span id="cb44-100"><a href="#cb44-100" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred_optimal,</span>
+<span id="cb44-101"><a href="#cb44-101" aria-hidden="true" tabindex="-1"></a>                           target_names<span class="op">=</span>[<span class="st">'正常'</span>, <span class="st">'欺诈'</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="实战-2手写数字识别-mnist" class="level2" data-number="4.10">
+<h2 data-number="4.10" class="anchored" data-anchor-id="实战-2手写数字识别-mnist"><span class="header-section-number">4.10</span> 3.9 实战 2：手写数字识别 (MNIST)</h2>
+<section id="mnist-数据集" class="level3" data-number="4.10.1">
+<h3 data-number="4.10.1" class="anchored" data-anchor-id="mnist-数据集"><span class="header-section-number">4.10.1</span> 📋 MNIST 数据集</h3>
+<pre><code>70,000 张手写数字图片
+  - 60,000 训练集
+  - 10,000 测试集
+
+每张图片：
+  - 28×28 像素
+  - 灰度值 0-255
+  - 标签：0-9</code></pre>
+</section>
+<section id="完整代码-1" class="level3" data-number="4.10.2">
+<h3 data-number="4.10.2" class="anchored" data-anchor-id="完整代码-1"><span class="header-section-number">4.10.2</span> 💻 完整代码</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, classification_report, confusion_matrix</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 加载数据</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"加载 MNIST 数据..."</span>)</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>mnist <span class="op">=</span> fetch_openml(<span class="st">'mnist_784'</span>, version<span class="op">=</span><span class="dv">1</span>, parser<span class="op">=</span><span class="st">'auto'</span>)</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> mnist[<span class="st">'data'</span>], mnist[<span class="st">'target'</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"数据形状: </span><span class="sc">{</span>X<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"标签形状: </span><span class="sc">{</span>y<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 可视化一些样本</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">5</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axes.flat):</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>    ax.imshow(X.iloc[i].values.reshape(<span class="dv">28</span>, <span class="dv">28</span>), cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f'标签: </span><span class="sc">{</span>y<span class="sc">.</span>iloc[i]<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 数据预处理</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 归一化到 [0, 1]</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用部分数据（加快训练）</span></span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>X_subset <span class="op">=</span> X[:<span class="dv">10000</span>]</span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a>y_subset <span class="op">=</span> y[:<span class="dv">10000</span>]</span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 分割数据</span></span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>    X_subset, y_subset, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 训练模型</span></span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">训练逻辑回归模型..."</span>)</span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LogisticRegression(</span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>    max_iter<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a>    multi_class<span class="op">=</span><span class="st">'multinomial'</span>,  <span class="co"># Softmax</span></span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a>    solver<span class="op">=</span><span class="st">'lbfgs'</span>,             <span class="co"># 优化算法</span></span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb46-47"><a href="#cb46-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-48"><a href="#cb46-48" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb46-49"><a href="#cb46-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-50"><a href="#cb46-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 预测</span></span>
+<span id="cb46-51"><a href="#cb46-51" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb46-52"><a href="#cb46-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-53"><a href="#cb46-53" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 评估</span></span>
+<span id="cb46-54"><a href="#cb46-54" aria-hidden="true" tabindex="-1"></a>accuracy <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
+<span id="cb46-55"><a href="#cb46-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">准确率: </span><span class="sc">{</span>accuracy<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb46-56"><a href="#cb46-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-57"><a href="#cb46-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">分类报告:"</span>)</span>
+<span id="cb46-58"><a href="#cb46-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred))</span>
+<span id="cb46-59"><a href="#cb46-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-60"><a href="#cb46-60" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. 混淆矩阵</span></span>
+<span id="cb46-61"><a href="#cb46-61" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, y_pred)</span>
+<span id="cb46-62"><a href="#cb46-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-63"><a href="#cb46-63" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb46-64"><a href="#cb46-64" aria-hidden="true" tabindex="-1"></a>sns.heatmap(cm, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'d'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb46-65"><a href="#cb46-65" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'预测标签'</span>)</span>
+<span id="cb46-66"><a href="#cb46-66" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'真实标签'</span>)</span>
+<span id="cb46-67"><a href="#cb46-67" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'混淆矩阵'</span>)</span>
+<span id="cb46-68"><a href="#cb46-68" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb46-69"><a href="#cb46-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-70"><a href="#cb46-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. 可视化一些预测结果</span></span>
+<span id="cb46-71"><a href="#cb46-71" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">5</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">7</span>))</span>
+<span id="cb46-72"><a href="#cb46-72" aria-hidden="true" tabindex="-1"></a>indices <span class="op">=</span> np.random.choice(<span class="bu">len</span>(X_test), <span class="dv">15</span>, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb46-73"><a href="#cb46-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-74"><a href="#cb46-74" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (ax, idx) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(axes.flat, indices)):</span>
+<span id="cb46-75"><a href="#cb46-75" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> X_test.iloc[idx].values.reshape(<span class="dv">28</span>, <span class="dv">28</span>)</span>
+<span id="cb46-76"><a href="#cb46-76" aria-hidden="true" tabindex="-1"></a>    true_label <span class="op">=</span> y_test.iloc[idx]</span>
+<span id="cb46-77"><a href="#cb46-77" aria-hidden="true" tabindex="-1"></a>    pred_label <span class="op">=</span> y_pred[idx]</span>
+<span id="cb46-78"><a href="#cb46-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-79"><a href="#cb46-79" aria-hidden="true" tabindex="-1"></a>    ax.imshow(image, cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb46-80"><a href="#cb46-80" aria-hidden="true" tabindex="-1"></a>    color <span class="op">=</span> <span class="st">'green'</span> <span class="cf">if</span> true_label <span class="op">==</span> pred_label <span class="cf">else</span> <span class="st">'red'</span></span>
+<span id="cb46-81"><a href="#cb46-81" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f'真实: </span><span class="sc">{</span>true_label<span class="sc">}</span><span class="ss">, 预测: </span><span class="sc">{</span>pred_label<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>color)</span>
+<span id="cb46-82"><a href="#cb46-82" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb46-83"><a href="#cb46-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-84"><a href="#cb46-84" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb46-85"><a href="#cb46-85" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb46-86"><a href="#cb46-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-87"><a href="#cb46-87" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. 查看模型学到的权重</span></span>
+<span id="cb46-88"><a href="#cb46-88" aria-hidden="true" tabindex="-1"></a><span class="co"># 每个数字的权重可以看作一个"模板"</span></span>
+<span id="cb46-89"><a href="#cb46-89" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">5</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
+<span id="cb46-90"><a href="#cb46-90" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> digit, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axes.flat):</span>
+<span id="cb46-91"><a href="#cb46-91" aria-hidden="true" tabindex="-1"></a>    weight <span class="op">=</span> model.coef_[digit].reshape(<span class="dv">28</span>, <span class="dv">28</span>)</span>
+<span id="cb46-92"><a href="#cb46-92" aria-hidden="true" tabindex="-1"></a>    ax.imshow(weight, cmap<span class="op">=</span><span class="st">'RdBu'</span>, vmin<span class="op">=-</span>weight.<span class="bu">max</span>(), vmax<span class="op">=</span>weight.<span class="bu">max</span>())</span>
+<span id="cb46-93"><a href="#cb46-93" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f'数字 </span><span class="sc">{</span>digit<span class="sc">}</span><span class="ss">的权重'</span>)</span>
+<span id="cb46-94"><a href="#cb46-94" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb46-95"><a href="#cb46-95" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb46-96"><a href="#cb46-96" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="逻辑回归的优缺点" class="level2" data-number="4.11">
+<h2 data-number="4.11" class="anchored" data-anchor-id="逻辑回归的优缺点"><span class="header-section-number">4.11</span> 3.10 逻辑回归的优缺点</h2>
+<section id="优点" class="level3" data-number="4.11.1">
+<h3 data-number="4.11.1" class="anchored" data-anchor-id="优点"><span class="header-section-number">4.11.1</span> ✅ 优点</h3>
+<ol type="1">
+<li><strong>简单高效</strong>
+<ul>
+<li>易于实现和理解</li>
+<li>训练速度快</li>
+<li>预测速度快</li>
+</ul></li>
+<li><strong>可解释性强</strong>
+<ul>
+<li>可以看权重了解特征重要性</li>
+<li>输出概率，方便决策</li>
+</ul></li>
+<li><strong>不需要太多数据</strong>
+<ul>
+<li>相比深度学习，数据需求少</li>
+</ul></li>
+<li><strong>不容易过拟合</strong>
+<ul>
+<li>模型简单，泛化能力好</li>
+<li>可以用正则化进一步控制</li>
+</ul></li>
+</ol>
+</section>
+<section id="缺点" class="level3" data-number="4.11.2">
+<h3 data-number="4.11.2" class="anchored" data-anchor-id="缺点"><span class="header-section-number">4.11.2</span> ❌ 缺点</h3>
+<ol type="1">
+<li><strong>线性模型</strong>
+<ul>
+<li>只能学习线性决策边界</li>
+<li>无法处理复杂的非线性关系</li>
+</ul></li>
+<li><strong>特征工程依赖</strong>
+<ul>
+<li>需要手动设计好的特征</li>
+<li>特征质量决定模型上限</li>
+</ul></li>
+<li><strong>多重共线性敏感</strong>
+<ul>
+<li>特征高度相关时，模型不稳定</li>
+</ul></li>
+<li><strong>类别不平衡问题</strong>
+<ul>
+<li>需要特殊处理</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="本章作业" class="level2" data-number="4.12">
+<h2 data-number="4.12" class="anchored" data-anchor-id="本章作业"><span class="header-section-number">4.12</span> 📝 本章作业</h2>
+<section id="作业-1概念题" class="level3" data-number="4.12.1">
+<h3 data-number="4.12.1" class="anchored" data-anchor-id="作业-1概念题"><span class="header-section-number">4.12.1</span> 作业 1：概念题</h3>
+<ol type="1">
+<li><strong>为什么不能用线性回归做分类？</strong>
+<ul>
+<li>举例说明问题</li>
+<li>画图解释</li>
+</ul></li>
+<li><strong>Sigmoid vs Softmax</strong>
+<ul>
+<li>什么时候用 Sigmoid？</li>
+<li>什么时候用 Softmax？</li>
+<li>它们的关系是什么？</li>
+</ul></li>
+<li><strong>评估指标选择</strong>
+<ul>
+<li>癌症检测应该关注 Precision 还是 Recall？为什么？</li>
+<li>垃圾邮件过滤应该关注哪个？</li>
+<li>给出 3 个场景和对应的最重要指标</li>
+</ul></li>
+</ol>
+</section>
+<section id="作业-2编程实践" class="level3" data-number="4.12.2">
+<h3 data-number="4.12.2" class="anchored" data-anchor-id="作业-2编程实践"><span class="header-section-number">4.12.2</span> 作业 2：编程实践</h3>
+<section id="任务-1乳腺癌检测" class="level4" data-number="4.12.2.1">
+<h4 data-number="4.12.2.1" class="anchored" data-anchor-id="任务-1乳腺癌检测"><span class="header-section-number">4.12.2.1</span> 任务 1：乳腺癌检测</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_breast_cancer</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载数据</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> load_breast_cancer()</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> data.data, data.target</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">:</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 分割数据（80/20）</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 特征缩放</span></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 训练逻辑回归模型</span></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 评估模型（混淆矩阵、ROC曲线）</span></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 调整决策阈值，优化 Recall</span></span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 比较不同正则化强度（C参数）的效果</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="任务-2多分类实战" class="level4" data-number="4.12.2.2">
+<h4 data-number="4.12.2.2" class="anchored" data-anchor-id="任务-2多分类实战"><span class="header-section-number">4.12.2.2</span> 任务 2：多分类实战</h4>
+<p>使用 Scikit-learn 的 <code>load_digits</code> 数据集（8×8 手写数字）</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_digits</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">:</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 加载数据并可视化</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 训练 Softmax Regression</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 分析哪些数字容易混淆（看混淆矩阵）</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 可视化模型学到的权重</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 实现 One-vs-Rest 方法并对比性能</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="作业-3kaggle-竞赛" class="level3" data-number="4.12.3">
+<h3 data-number="4.12.3" class="anchored" data-anchor-id="作业-3kaggle-竞赛"><span class="header-section-number">4.12.3</span> 作业 3：Kaggle 竞赛</h3>
+<p>参加 “Titanic - Machine Learning from Disaster”</p>
+<p><strong>要求</strong>： 1. 数据探索和可视化 2. 特征工程（处理缺失值、创建新特征） 3. 训练逻辑回归模型 4. 调整超参数 5. 提交预测结果 6. 写一份完整报告</p>
+<hr>
+</section>
+</section>
+<section id="本章关键概念总结" class="level2" data-number="4.13">
+<h2 data-number="4.13" class="anchored" data-anchor-id="本章关键概念总结"><span class="header-section-number">4.13</span> 🔑 本章关键概念总结</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>分类</td>
+<td>预测离散类别</td>
+</tr>
+<tr class="even">
+<td>Sigmoid</td>
+<td>将实数映射到 (0,1)</td>
+</tr>
+<tr class="odd">
+<td>逻辑回归</td>
+<td>用于二元分类</td>
+</tr>
+<tr class="even">
+<td>Cross Entropy</td>
+<td>分类问题的损失函数</td>
+</tr>
+<tr class="odd">
+<td>Softmax</td>
+<td>多元分类的激活函数</td>
+</tr>
+<tr class="even">
+<td>Confusion Matrix</td>
+<td>评估分类性能</td>
+</tr>
+<tr class="odd">
+<td>Precision</td>
+<td>预测为正的准确率</td>
+</tr>
+<tr class="even">
+<td>Recall</td>
+<td>找出所有正例的能力</td>
+</tr>
+<tr class="odd">
+<td>F1 Score</td>
+<td>Precision 和 Recall 的调和平均</td>
+</tr>
+<tr class="even">
+<td>ROC/AUC</td>
+<td>评估分类器性能</td>
+</tr>
+<tr class="odd">
+<td>类别不平衡</td>
+<td>类别样本数差异大</td>
+</tr>
+<tr class="even">
+<td>SMOTE</td>
+<td>合成少数类样本</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="下一章预告" class="level2" data-number="4.14">
+<h2 data-number="4.14" class="anchored" data-anchor-id="下一章预告"><span class="header-section-number">4.14</span> 🎯 下一章预告</h2>
+<p><strong>第四章：深度神经网络基础 (Deep Neural Networks)</strong> - 从逻辑回归到神经网络 - 激活函数 (ReLU, Tanh, etc.) - 反向传播算法 - 深度网络的训练技巧 - 实战：用神经网络改进 MNIST</p>
+<hr>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter2.html" class="pagination-link" aria-label="第二章：回归 (Regression)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">第二章：回归 (Regression)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter4.html" class="pagination-link" aria-label="第四章：深度神经网络基础 (Deep Neural Networks)">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">第四章：深度神经网络基础 (Deep Neural Networks)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

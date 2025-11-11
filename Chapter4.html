@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; 第四章：深度神经网络基础 (Deep Neural Networks) – 深度学习完整教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter5.html" rel="next">
+<link href="./Chapter3.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5ea8f22911a6df30576a2a25a24cdd7a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">第一部分：基础篇</a></li><li class="breadcrumb-item"><a href="./Chapter4.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">第四章：深度神经网络基础 (Deep Neural Networks)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">深度学习完整教程</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">📋 课程整体框架</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一部分：基础篇</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">机器学习完整课程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">第二章：回归 (Regression)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">第四章：深度神经网络基础 (Deep Neural Networks)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二部分：进阶篇</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">第五章：优化算法与训练技巧 (Optimization &amp; Training Tricks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">第六章：卷积神经网络 (Convolutional Neural Networks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">第七章：循环神经网络 (Recurrent Neural Networks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">第八章：Attention 与 Transformer</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三部分：实践与应用</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">第九章：迁移学习与微调 (Transfer Learning &amp; Fine-tuning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">第十章：强化学习 (Reinforcement Learning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">第十一章：无监督学习 (Unsupervised Learning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">第十二章：可解释性与对抗攻击</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">第十三章：大语言模型时代</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#章节目标" id="toc-章节目标" class="nav-link active" data-scroll-target="#章节目标"><span class="header-section-number">5.1</span> 📌 章节目标</a></li>
+  <li><a href="#从逻辑回归到神经网络" id="toc-从逻辑回归到神经网络" class="nav-link" data-scroll-target="#从逻辑回归到神经网络"><span class="header-section-number">5.2</span> 4.1 从逻辑回归到神经网络</a>
+  <ul class="collapse">
+  <li><a href="#回顾逻辑回归" id="toc-回顾逻辑回归" class="nav-link" data-scroll-target="#回顾逻辑回归"><span class="header-section-number">5.2.1</span> 🔄 回顾：逻辑回归</a></li>
+  <li><a href="#解决方案堆叠多层" id="toc-解决方案堆叠多层" class="nav-link" data-scroll-target="#解决方案堆叠多层"><span class="header-section-number">5.2.2</span> 💡 解决方案：堆叠多层</a></li>
+  <li><a href="#神经元-neuron" id="toc-神经元-neuron" class="nav-link" data-scroll-target="#神经元-neuron"><span class="header-section-number">5.2.3</span> 🧠 神经元 (Neuron)</a></li>
+  <li><a href="#神经网络-很多神经元的组合" id="toc-神经网络-很多神经元的组合" class="nav-link" data-scroll-target="#神经网络-很多神经元的组合"><span class="header-section-number">5.2.4</span> 🕸️ 神经网络 = 很多神经元的组合</a></li>
+  </ul></li>
+  <li><a href="#前向传播-forward-propagation" id="toc-前向传播-forward-propagation" class="nav-link" data-scroll-target="#前向传播-forward-propagation"><span class="header-section-number">5.3</span> 4.2 前向传播 (Forward Propagation)</a>
+  <ul class="collapse">
+  <li><a href="#数学推导" id="toc-数学推导" class="nav-link" data-scroll-target="#数学推导"><span class="header-section-number">5.3.1</span> 📐 数学推导</a></li>
+  <li><a href="#具体例子" id="toc-具体例子" class="nav-link" data-scroll-target="#具体例子"><span class="header-section-number">5.3.2</span> 🔢 具体例子</a></li>
+  <li><a href="#代码实现" id="toc-代码实现" class="nav-link" data-scroll-target="#代码实现"><span class="header-section-number">5.3.3</span> 💻 代码实现</a></li>
+  </ul></li>
+  <li><a href="#激活函数-activation-functions" id="toc-激活函数-activation-functions" class="nav-link" data-scroll-target="#激活函数-activation-functions"><span class="header-section-number">5.4</span> 4.3 激活函数 (Activation Functions)</a>
+  <ul class="collapse">
+  <li><a href="#为什么需要激活函数" id="toc-为什么需要激活函数" class="nav-link" data-scroll-target="#为什么需要激活函数"><span class="header-section-number">5.4.1</span> 🤔 为什么需要激活函数？</a></li>
+  <li><a href="#常见激活函数" id="toc-常见激活函数" class="nav-link" data-scroll-target="#常见激活函数"><span class="header-section-number">5.4.2</span> 🔹 常见激活函数</a></li>
+  <li><a href="#激活函数对比" id="toc-激活函数对比" class="nav-link" data-scroll-target="#激活函数对比"><span class="header-section-number">5.4.3</span> 📊 激活函数对比</a></li>
+  <li><a href="#激活函数选择指南" id="toc-激活函数选择指南" class="nav-link" data-scroll-target="#激活函数选择指南"><span class="header-section-number">5.4.4</span> 💡 激活函数选择指南</a></li>
+  </ul></li>
+  <li><a href="#损失函数-loss-functions" id="toc-损失函数-loss-functions" class="nav-link" data-scroll-target="#损失函数-loss-functions"><span class="header-section-number">5.5</span> 4.4 损失函数 (Loss Functions)</a>
+  <ul class="collapse">
+  <li><a href="#常见损失函数" id="toc-常见损失函数" class="nav-link" data-scroll-target="#常见损失函数"><span class="header-section-number">5.5.1</span> 🎯 常见损失函数</a></li>
+  </ul></li>
+  <li><a href="#反向传播-backpropagation" id="toc-反向传播-backpropagation" class="nav-link" data-scroll-target="#反向传播-backpropagation"><span class="header-section-number">5.6</span> 4.5 反向传播 (Backpropagation)</a>
+  <ul class="collapse">
+  <li><a href="#核心思想" id="toc-核心思想" class="nav-link" data-scroll-target="#核心思想"><span class="header-section-number">5.6.1</span> 🎯 核心思想</a></li>
+  <li><a href="#链式法则回顾" id="toc-链式法则回顾" class="nav-link" data-scroll-target="#链式法则回顾"><span class="header-section-number">5.6.2</span> 📐 链式法则回顾</a></li>
+  <li><a href="#反向传播推导" id="toc-反向传播推导" class="nav-link" data-scroll-target="#反向传播推导"><span class="header-section-number">5.6.3</span> 🔄 反向传播推导</a></li>
+  <li><a href="#代码实现-1" id="toc-代码实现-1" class="nav-link" data-scroll-target="#代码实现-1"><span class="header-section-number">5.6.4</span> 💻 代码实现</a></li>
+  <li><a href="#完整训练循环" id="toc-完整训练循环" class="nav-link" data-scroll-target="#完整训练循环"><span class="header-section-number">5.6.5</span> 🔁 完整训练循环</a></li>
+  </ul></li>
+  <li><a href="#初始化策略" id="toc-初始化策略" class="nav-link" data-scroll-target="#初始化策略"><span class="header-section-number">5.7</span> 4.6 初始化策略</a>
+  <ul class="collapse">
+  <li><a href="#为什么初始化重要" id="toc-为什么初始化重要" class="nav-link" data-scroll-target="#为什么初始化重要"><span class="header-section-number">5.7.1</span> 🤔 为什么初始化重要？</a></li>
+  <li><a href="#好的初始化方法" id="toc-好的初始化方法" class="nav-link" data-scroll-target="#好的初始化方法"><span class="header-section-number">5.7.2</span> ✅ 好的初始化方法</a></li>
+  <li><a href="#实现" id="toc-实现" class="nav-link" data-scroll-target="#实现"><span class="header-section-number">5.7.3</span> 💻 实现</a></li>
+  </ul></li>
+  <li><a href="#梯度检验-gradient-checking" id="toc-梯度检验-gradient-checking" class="nav-link" data-scroll-target="#梯度检验-gradient-checking"><span class="header-section-number">5.8</span> 4.7 梯度检验 (Gradient Checking)</a>
+  <ul class="collapse">
+  <li><a href="#目的" id="toc-目的" class="nav-link" data-scroll-target="#目的"><span class="header-section-number">5.8.1</span> 🎯 目的</a></li>
+  <li><a href="#数值梯度" id="toc-数值梯度" class="nav-link" data-scroll-target="#数值梯度"><span class="header-section-number">5.8.2</span> 📐 数值梯度</a></li>
+  <li><a href="#实现-1" id="toc-实现-1" class="nav-link" data-scroll-target="#实现-1"><span class="header-section-number">5.8.3</span> 💻 实现</a></li>
+  </ul></li>
+  <li><a href="#使用深度学习框架" id="toc-使用深度学习框架" class="nav-link" data-scroll-target="#使用深度学习框架"><span class="header-section-number">5.9</span> 4.8 使用深度学习框架</a>
+  <ul class="collapse">
+  <li><a href="#pytorch-实现" id="toc-pytorch-实现" class="nav-link" data-scroll-target="#pytorch-实现"><span class="header-section-number">5.9.1</span> 🔥 PyTorch 实现</a></li>
+  <li><a href="#tensorflowkeras-实现" id="toc-tensorflowkeras-实现" class="nav-link" data-scroll-target="#tensorflowkeras-实现"><span class="header-section-number">5.9.2</span> 🌐 TensorFlow/Keras 实现</a></li>
+  </ul></li>
+  <li><a href="#实战mnist-手写数字识别深度网络" id="toc-实战mnist-手写数字识别深度网络" class="nav-link" data-scroll-target="#实战mnist-手写数字识别深度网络"><span class="header-section-number">5.10</span> 4.9 实战：MNIST 手写数字识别（深度网络）</a>
+  <ul class="collapse">
+  <li><a href="#完整实现" id="toc-完整实现" class="nav-link" data-scroll-target="#完整实现"><span class="header-section-number">5.10.1</span> 💻 完整实现</a></li>
+  </ul></li>
+  <li><a href="#本章作业" id="toc-本章作业" class="nav-link" data-scroll-target="#本章作业"><span class="header-section-number">5.11</span> 📝 本章作业</a>
+  <ul class="collapse">
+  <li><a href="#作业-1理论题" id="toc-作业-1理论题" class="nav-link" data-scroll-target="#作业-1理论题"><span class="header-section-number">5.11.1</span> 作业 1：理论题</a></li>
+  <li><a href="#作业-2编程实践" id="toc-作业-2编程实践" class="nav-link" data-scroll-target="#作业-2编程实践"><span class="header-section-number">5.11.2</span> 作业 2：编程实践</a></li>
+  </ul></li>
+  <li><a href="#本章关键概念" id="toc-本章关键概念" class="nav-link" data-scroll-target="#本章关键概念"><span class="header-section-number">5.12</span> 🔑 本章关键概念</a></li>
+  <li><a href="#下一章预告" id="toc-下一章预告" class="nav-link" data-scroll-target="#下一章预告"><span class="header-section-number">5.13</span> 🎯 下一章预告</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">第一部分：基础篇</a></li><li class="breadcrumb-item"><a href="./Chapter4.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">第四章：深度神经网络基础 (Deep Neural Networks)</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">第四章：深度神经网络基础 (Deep Neural Networks)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="章节目标" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="章节目标"><span class="header-section-number">5.1</span> 📌 章节目标</h2>
+<ul>
+<li>理解从逻辑回归到神经网络的演进</li>
+<li>掌握前向传播和反向传播算法</li>
+<li>了解各种激活函数及其作用</li>
+<li>学习深度网络的初始化和训练技巧</li>
+<li>实战：用 PyTorch/TensorFlow 构建神经网络</li>
+</ul>
+<hr>
+</section>
+<section id="从逻辑回归到神经网络" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="从逻辑回归到神经网络"><span class="header-section-number">5.2</span> 4.1 从逻辑回归到神经网络</h2>
+<section id="回顾逻辑回归" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="回顾逻辑回归"><span class="header-section-number">5.2.1</span> 🔄 回顾：逻辑回归</h3>
+<pre><code>输入 x → 线性组合 z = w·x + b → Sigmoid σ(z) → 输出 ŷ</code></pre>
+<p><strong>局限性</strong>：只能学习线性决策边界</p>
+<pre><code>示例：XOR 问题
+
+输入          输出
+x₁  x₂       y
+0   0    →   0
+0   1    →   1
+1   0    →   1
+1   1    →   0
+
+x₂
+↑
+1 | 0   1    无法用一条直线分开！
+0 | 1   0
+  |_____→ x₁
+  0     1</code></pre>
+</section>
+<section id="解决方案堆叠多层" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="解决方案堆叠多层"><span class="header-section-number">5.2.2</span> 💡 解决方案：堆叠多层</h3>
+<p><strong>神经网络的核心思想</strong>：</p>
+<blockquote class="blockquote">
+<p>一层逻辑回归太简单？那就叠很多层！</p>
+</blockquote>
+<pre><code>输入层 → 隐藏层1 → 隐藏层2 → ... → 输出层</code></pre>
+</section>
+<section id="神经元-neuron" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="神经元-neuron"><span class="header-section-number">5.2.3</span> 🧠 神经元 (Neuron)</h3>
+<p><strong>单个神经元 = 逻辑回归单元</strong></p>
+<pre><code>       x₁ ─┐
+       x₂ ─┤
+       x₃ ─┼→ z = Σwᵢxᵢ + b → a = σ(z) → 输出
+      ...  ┤
+       xₙ ─┘
+
+输入 → 加权求和 → 激活函数 → 输出</code></pre>
+<p><strong>数学表示</strong>：</p>
+<pre><code>z = w₁x₁ + w₂x₂ + ... + wₙxₙ + b
+a = σ(z)
+
+向量形式：
+z = wᵀx + b
+a = σ(z)</code></pre>
+</section>
+<section id="神经网络-很多神经元的组合" class="level3" data-number="5.2.4">
+<h3 data-number="5.2.4" class="anchored" data-anchor-id="神经网络-很多神经元的组合"><span class="header-section-number">5.2.4</span> 🕸️ 神经网络 = 很多神经元的组合</h3>
+<pre><code>输入层        隐藏层1         隐藏层2        输出层
+  x₁ ───┬──→ h₁⁽¹⁾ ───┬──→ h₁⁽²⁾ ───┬──→ ŷ₁
+        │              │              │
+  x₂ ───┼──→ h₂⁽¹⁾ ───┼──→ h₂⁽²⁾ ───┼──→ ŷ₂
+        │              │              │
+  x₃ ───┼──→ h₃⁽¹⁾ ───┼──→ h₃⁽²⁾ ───┼──→ ŷ₃
+        │              │              │
+  ...   └──→ ...   ───└──→ ...   ───┘
+
+第0层         第1层           第2层         第3层
+(输入)       (隐藏)         (隐藏)       (输出)</code></pre>
+<hr>
+</section>
+</section>
+<section id="前向传播-forward-propagation" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="前向传播-forward-propagation"><span class="header-section-number">5.3</span> 4.2 前向传播 (Forward Propagation)</h2>
+<section id="数学推导" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="数学推导"><span class="header-section-number">5.3.1</span> 📐 数学推导</h3>
+<p><strong>符号定义</strong>：</p>
+<pre><code>L: 网络层数
+n⁽ˡ⁾: 第 l 层的神经元数量
+w⁽ˡ⁾: 第 l 层的权重矩阵
+b⁽ˡ⁾: 第 l 层的偏置向量
+a⁽ˡ⁾: 第 l 层的激活值（输出）
+z⁽ˡ⁾: 第 l 层的加权输入</code></pre>
+<p><strong>单层计算</strong>：</p>
+<pre><code>z⁽ˡ⁾ = W⁽ˡ⁾·a⁽ˡ⁻¹⁾ + b⁽ˡ⁾
+a⁽ˡ⁾ = σ(z⁽ˡ⁾)</code></pre>
+</section>
+<section id="具体例子" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="具体例子"><span class="header-section-number">5.3.2</span> 🔢 具体例子</h3>
+<p><strong>网络结构</strong>：2 → 3 → 1</p>
+<pre><code>输入层：2个神经元 [x₁, x₂]
+隐藏层：3个神经元 [h₁, h₂, h₃]
+输出层：1个神经元 [ŷ]</code></pre>
+<p><strong>第1层（输入→隐藏）</strong>：</p>
+<pre><code>z₁⁽¹⁾ = w₁₁⁽¹⁾x₁ + w₁₂⁽¹⁾x₂ + b₁⁽¹⁾
+z₂⁽¹⁾ = w₂₁⁽¹⁾x₁ + w₂₂⁽¹⁾x₂ + b₂⁽¹⁾
+z₃⁽¹⁾ = w₃₁⁽¹⁾x₁ + w₃₂⁽¹⁾x₂ + b₃⁽¹⁾
+
+a₁⁽¹⁾ = σ(z₁⁽¹⁾)
+a₂⁽¹⁾ = σ(z₂⁽¹⁾)
+a₃⁽¹⁾ = σ(z₃⁽¹⁾)
+
+矩阵形式：
+z⁽¹⁾ = W⁽¹⁾·x + b⁽¹⁾
+
+其中：
+     [w₁₁ w₁₂]       [b₁]
+W⁽¹⁾=[w₂₁ w₂₂]  b⁽¹⁾=[b₂]
+     [w₃₁ w₃₂]       [b₃]</code></pre>
+<p><strong>第2层（隐藏→输出）</strong>：</p>
+<pre><code>z⁽²⁾ = W⁽²⁾·a⁽¹⁾ + b⁽²⁾
+ŷ = a⁽²⁾ = σ(z⁽²⁾)
+
+其中：
+W⁽²⁾ = [w₁ w₂ w₃]  (1×3 矩阵)
+b⁽²⁾ = [b]          (标量)</code></pre>
+</section>
+<section id="代码实现" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="代码实现"><span class="header-section-number">5.3.3</span> 💻 代码实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sigmoid(z):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Sigmoid 激活函数"""</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>z))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward_propagation(X, parameters):</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">    前向传播</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">    参数：</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">        X: 输入数据 (n_features, m_samples)</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">        parameters: 字典，包含 W1, b1, W2, b2</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">    返回：</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">        A2: 输出层激活值</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">        cache: 中间值，用于反向传播</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 获取参数</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    W1 <span class="op">=</span> parameters[<span class="st">'W1'</span>]</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    b1 <span class="op">=</span> parameters[<span class="st">'b1'</span>]</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    W2 <span class="op">=</span> parameters[<span class="st">'W2'</span>]</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    b2 <span class="op">=</span> parameters[<span class="st">'b2'</span>]</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 第1层</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    Z1 <span class="op">=</span> np.dot(W1, X) <span class="op">+</span> b1</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    A1 <span class="op">=</span> sigmoid(Z1)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 第2层</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    Z2 <span class="op">=</span> np.dot(W2, A1) <span class="op">+</span> b2</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    A2 <span class="op">=</span> sigmoid(Z2)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 保存中间值</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    cache <span class="op">=</span> {</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Z1'</span>: Z1,</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'A1'</span>: A1,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Z2'</span>: Z2,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">'A2'</span>: A2</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A2, cache</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 示例</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始化参数</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>parameters <span class="op">=</span> {</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">'W1'</span>: np.random.randn(<span class="dv">3</span>, <span class="dv">2</span>) <span class="op">*</span> <span class="fl">0.01</span>,  <span class="co"># 3×2</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">'b1'</span>: np.zeros((<span class="dv">3</span>, <span class="dv">1</span>)),              <span class="co"># 3×1</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>    <span class="st">'W2'</span>: np.random.randn(<span class="dv">1</span>, <span class="dv">3</span>) <span class="op">*</span> <span class="fl">0.01</span>,  <span class="co"># 1×3</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    <span class="st">'b2'</span>: np.zeros((<span class="dv">1</span>, <span class="dv">1</span>))               <span class="co"># 1×1</span></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a><span class="co"># 输入数据</span></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([[<span class="fl">1.0</span>, <span class="fl">2.0</span>],</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>              [<span class="fl">0.5</span>, <span class="fl">1.5</span>]]).T  <span class="co"># 2×2 (2个样本)</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a><span class="co"># 前向传播</span></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>A2, cache <span class="op">=</span> forward_propagation(X, parameters)</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"输入 X:"</span>)</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X)</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">输出 A2:"</span>)</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A2)</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">隐藏层激活 A1:"</span>)</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cache[<span class="st">'A1'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="激活函数-activation-functions" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="激活函数-activation-functions"><span class="header-section-number">5.4</span> 4.3 激活函数 (Activation Functions)</h2>
+<section id="为什么需要激活函数" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="为什么需要激活函数"><span class="header-section-number">5.4.1</span> 🤔 为什么需要激活函数？</h3>
+<p><strong>如果没有激活函数</strong>（或使用线性激活）：</p>
+<pre><code>z⁽¹⁾ = W⁽¹⁾x + b⁽¹⁾
+a⁽¹⁾ = z⁽¹⁾              ← 线性
+
+z⁽²⁾ = W⁽²⁾a⁽¹⁾ + b⁽²⁾
+    = W⁽²⁾(W⁽¹⁾x + b⁽¹⁾) + b⁽²⁾
+    = (W⁽²⁾W⁽¹⁾)x + (W⁽²⁾b⁽¹⁾ + b⁽²⁾)
+    = W'x + b'           ← 还是线性！
+
+多层线性变换 = 单层线性变换
+深度网络退化成浅层网络！</code></pre>
+<p><strong>结论</strong>：激活函数引入非线性，让神经网络能学习复杂函数</p>
+<hr>
+</section>
+<section id="常见激活函数" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="常见激活函数"><span class="header-section-number">5.4.2</span> 🔹 常见激活函数</h3>
+<section id="sigmoid" class="level4" data-number="5.4.2.1">
+<h4 data-number="5.4.2.1" class="anchored" data-anchor-id="sigmoid"><span class="header-section-number">5.4.2.1</span> <strong>1. Sigmoid</strong></h4>
+<pre><code>σ(z) = 1 / (1 + e⁻ᶻ)
+
+范围：(0, 1)
+导数：σ'(z) = σ(z)·(1 - σ(z))</code></pre>
+<p><strong>图形</strong>：</p>
+<pre><code>  1 |         ____
+    |       /
+0.5 |      /
+    |     /
+  0 |____/
+    |___________ z
+   -5  0   5</code></pre>
+<p><strong>优点</strong>： - 输出范围 (0,1)，适合表示概率 - 平滑可导</p>
+<p><strong>缺点</strong>： - <strong>梯度消失</strong>：z 很大或很小时，梯度接近 0 - <strong>输出不是零中心</strong>：都是正数，导致权重更新效率低 - <strong>计算量大</strong>：有指数运算</p>
+<p><strong>使用场景</strong>： - 输出层（二元分类） - 不推荐在隐藏层使用</p>
+</section>
+<section id="tanh-双曲正切" class="level4" data-number="5.4.2.2">
+<h4 data-number="5.4.2.2" class="anchored" data-anchor-id="tanh-双曲正切"><span class="header-section-number">5.4.2.2</span> <strong>2. Tanh (双曲正切)</strong></h4>
+<pre><code>tanh(z) = (eᶻ - e⁻ᶻ) / (eᶻ + e⁻ᶻ)
+        = 2·σ(2z) - 1
+
+范围：(-1, 1)
+导数：tanh'(z) = 1 - tanh²(z)</code></pre>
+<p><strong>图形</strong>：</p>
+<pre><code>  1 |         ____
+    |       /
+  0 |      /
+    |     /
+ -1 |____/
+    |___________ z
+   -5  0   5</code></pre>
+<p><strong>优点</strong>： - 零中心输出 - 比 Sigmoid 好</p>
+<p><strong>缺点</strong>： - 仍有梯度消失问题 - 计算量大</p>
+<p><strong>使用场景</strong>： - RNN/LSTM 中常用 - 隐藏层（但现在更推荐 ReLU）</p>
+</section>
+<section id="relu-rectified-linear-unit" class="level4" data-number="5.4.2.3">
+<h4 data-number="5.4.2.3" class="anchored" data-anchor-id="relu-rectified-linear-unit"><span class="header-section-number">5.4.2.3</span> <strong>3. ReLU (Rectified Linear Unit)</strong> ⭐</h4>
+<pre><code>ReLU(z) = max(0, z)
+
+       ⎧ z,  如果 z &gt; 0
+     = ⎨
+       ⎩ 0,  如果 z ≤ 0
+
+导数：ReLU'(z) = ⎧ 1, 如果 z &gt; 0
+                 ⎩ 0, 如果 z ≤ 0</code></pre>
+<p><strong>图形</strong>：</p>
+<pre><code>    |    /
+    |   /
+    |  /
+    | /
+____|/_______ z
+    0</code></pre>
+<p><strong>优点</strong>： - ✅ <strong>计算简单</strong>：不涉及指数运算 - ✅ <strong>缓解梯度消失</strong>：正区域梯度恒为1 - ✅ <strong>收敛快</strong>：比 Sigmoid/Tanh 快很多 - ✅ <strong>稀疏激活</strong>：约50%神经元被激活</p>
+<p><strong>缺点</strong>： - ❌ <strong>Dead ReLU</strong>：负区域梯度为0，神经元可能”死亡” - ❌ 输出不是零中心</p>
+<p><strong>使用场景</strong>： - 🌟 <strong>默认首选</strong>！隐藏层的标准选择 - CNN 中广泛使用</p>
+</section>
+<section id="leaky-relu" class="level4" data-number="5.4.2.4">
+<h4 data-number="5.4.2.4" class="anchored" data-anchor-id="leaky-relu"><span class="header-section-number">5.4.2.4</span> <strong>4. Leaky ReLU</strong></h4>
+<pre><code>Leaky ReLU(z) = max(αz, z)
+
+              ⎧ z,   如果 z &gt; 0
+            = ⎨
+              ⎩ αz,  如果 z ≤ 0
+
+通常 α = 0.01</code></pre>
+<p><strong>图形</strong>：</p>
+<pre><code>    |    /
+    |   /
+    |  /
+    | /
+___/|_______ z
+  / 0</code></pre>
+<p><strong>优点</strong>： - 解决 Dead ReLU 问题 - 负区域仍有小梯度</p>
+<p><strong>变种</strong>： - <strong>PReLU</strong> (Parametric ReLU)：α 是可学习的参数 - <strong>ELU</strong> (Exponential Linear Unit)</p>
+</section>
+<section id="softmax-输出层" class="level4" data-number="5.4.2.5">
+<h4 data-number="5.4.2.5" class="anchored" data-anchor-id="softmax-输出层"><span class="header-section-number">5.4.2.5</span> <strong>5. Softmax</strong> (输出层)</h4>
+<pre><code>对于 K 个类别：
+
+Softmax(zᵢ) = e^zᵢ / Σⱼ e^zⱼ
+
+性质：
+- Σᵢ Softmax(zᵢ) = 1
+- 输出可解释为概率</code></pre>
+<p><strong>使用场景</strong>： - 多分类问题的输出层</p>
+</section>
+<section id="其他激活函数" class="level4" data-number="5.4.2.6">
+<h4 data-number="5.4.2.6" class="anchored" data-anchor-id="其他激活函数"><span class="header-section-number">5.4.2.6</span> <strong>6. 其他激活函数</strong></h4>
+<p><strong>Swish</strong> (Google 2017):</p>
+<pre><code>Swish(z) = z·σ(z)
+
+优点：无界、平滑、非单调</code></pre>
+<p><strong>GELU</strong> (Gaussian Error Linear Unit):</p>
+<pre><code>GELU(z) ≈ 0.5z(1 + tanh(√(2/π)(z + 0.044715z³)))
+
+用于 BERT、GPT</code></pre>
+<hr>
+</section>
+</section>
+<section id="激活函数对比" class="level3" data-number="5.4.3">
+<h3 data-number="5.4.3" class="anchored" data-anchor-id="激活函数对比"><span class="header-section-number">5.4.3</span> 📊 激活函数对比</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sigmoid(z):</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>z))</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tanh(z):</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.tanh(z)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> relu(z):</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.maximum(<span class="dv">0</span>, z)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> leaky_relu(z, alpha<span class="op">=</span><span class="fl">0.01</span>):</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.maximum(alpha <span class="op">*</span> z, z)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elu(z, alpha<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.where(z <span class="op">&gt;</span> <span class="dv">0</span>, z, alpha <span class="op">*</span> (np.exp(z) <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成数据</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1000</span>)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘图</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">10</span>))</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 激活函数</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>plt.plot(z, sigmoid(z), label<span class="op">=</span><span class="st">'Sigmoid'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>plt.plot(z, tanh(z), label<span class="op">=</span><span class="st">'Tanh'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>plt.plot(z, relu(z), label<span class="op">=</span><span class="st">'ReLU'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>plt.plot(z, leaky_relu(z), label<span class="op">=</span><span class="st">'Leaky ReLU'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'z'</span>)</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Activation'</span>)</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'激活函数'</span>)</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 导数</span></span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>sigmoid_derivative <span class="op">=</span> sigmoid(z) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> sigmoid(z))</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>tanh_derivative <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> tanh(z)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>relu_derivative <span class="op">=</span> (z <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>leaky_relu_derivative <span class="op">=</span> np.where(z <span class="op">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.01</span>)</span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>plt.plot(z, sigmoid_derivative, label<span class="op">=</span><span class="st">'Sigmoid</span><span class="ch">\'</span><span class="st">'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>plt.plot(z, tanh_derivative, label<span class="op">=</span><span class="st">'Tanh</span><span class="ch">\'</span><span class="st">'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>plt.plot(z, relu_derivative, label<span class="op">=</span><span class="st">'ReLU</span><span class="ch">\'</span><span class="st">'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>plt.plot(z, leaky_relu_derivative, label<span class="op">=</span><span class="st">'Leaky ReLU</span><span class="ch">\'</span><span class="st">'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'z'</span>)</span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Derivative'</span>)</span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'激活函数的导数'</span>)</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a><span class="co"># ReLU 变种对比</span></span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>plt.plot(z, relu(z), label<span class="op">=</span><span class="st">'ReLU'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>plt.plot(z, leaky_relu(z), label<span class="op">=</span><span class="st">'Leaky ReLU'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>plt.plot(z, elu(z), label<span class="op">=</span><span class="st">'ELU'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'z'</span>)</span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Activation'</span>)</span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'ReLU 变种对比'</span>)</span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a><span class="co"># 梯度消失问题演示</span></span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a>z_grad <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">1000</span>)</span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a>sigmoid_grad <span class="op">=</span> sigmoid(z_grad) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> sigmoid(z_grad))</span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a>tanh_grad <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> tanh(z_grad)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a>relu_grad <span class="op">=</span> (z_grad <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)</span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a>plt.plot(z_grad, sigmoid_grad, label<span class="op">=</span><span class="st">'Sigmoid'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a>plt.plot(z_grad, tanh_grad, label<span class="op">=</span><span class="st">'Tanh'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a>plt.plot(z_grad, relu_grad, label<span class="op">=</span><span class="st">'ReLU'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'z'</span>)</span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Gradient'</span>)</span>
+<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'梯度消失问题'</span>)</span>
+<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="fl">0.1</span>, <span class="fl">1.1</span>)</span>
+<span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="激活函数选择指南" class="level3" data-number="5.4.4">
+<h3 data-number="5.4.4" class="anchored" data-anchor-id="激活函数选择指南"><span class="header-section-number">5.4.4</span> 💡 激活函数选择指南</h3>
+<pre><code>隐藏层：
+  ├─ 默认：ReLU ⭐
+  ├─ 尝试：Leaky ReLU / PReLU / ELU
+  └─ 避免：Sigmoid / Tanh (除非特殊需求)
+
+输出层：
+  ├─ 二元分类：Sigmoid
+  ├─ 多元分类：Softmax
+  ├─ 回归：Linear (无激活函数)
+  └─ 特殊范围：Tanh (输出[-1,1])</code></pre>
+<hr>
+</section>
+</section>
+<section id="损失函数-loss-functions" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="损失函数-loss-functions"><span class="header-section-number">5.5</span> 4.4 损失函数 (Loss Functions)</h2>
+<section id="常见损失函数" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="常见损失函数"><span class="header-section-number">5.5.1</span> 🎯 常见损失函数</h3>
+<section id="回归问题" class="level4" data-number="5.5.1.1">
+<h4 data-number="5.5.1.1" class="anchored" data-anchor-id="回归问题"><span class="header-section-number">5.5.1.1</span> <strong>1. 回归问题</strong></h4>
+<p><strong>Mean Squared Error (MSE)</strong>:</p>
+<pre><code>L = (1/N) Σ(ŷⁿ - yⁿ)²</code></pre>
+<p><strong>Mean Absolute Error (MAE)</strong>:</p>
+<pre><code>L = (1/N) Σ|ŷⁿ - yⁿ|</code></pre>
+<p><strong>Huber Loss</strong> (结合 MSE 和 MAE):</p>
+<pre><code>        ⎧ 0.5·(y - ŷ)²,           if |y - ŷ| ≤ δ
+L_δ(y,ŷ)=⎨
+        ⎩ δ·(|y - ŷ| - 0.5·δ),   otherwise</code></pre>
+</section>
+<section id="二元分类" class="level4" data-number="5.5.1.2">
+<h4 data-number="5.5.1.2" class="anchored" data-anchor-id="二元分类"><span class="header-section-number">5.5.1.2</span> <strong>2. 二元分类</strong></h4>
+<p><strong>Binary Cross Entropy</strong>:</p>
+<pre><code>L = -(1/N) Σ[yⁿ·log(ŷⁿ) + (1-yⁿ)·log(1-ŷⁿ)]</code></pre>
+</section>
+<section id="多元分类" class="level4" data-number="5.5.1.3">
+<h4 data-number="5.5.1.3" class="anchored" data-anchor-id="多元分类"><span class="header-section-number">5.5.1.3</span> <strong>3. 多元分类</strong></h4>
+<p><strong>Categorical Cross Entropy</strong>:</p>
+<pre><code>L = -(1/N) ΣΣ yᵢⁿ·log(ŷᵢⁿ)
+           n i
+
+其中 yᵢⁿ 是 one-hot 编码</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="反向传播-backpropagation" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="反向传播-backpropagation"><span class="header-section-number">5.6</span> 4.5 反向传播 (Backpropagation)</h2>
+<section id="核心思想" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="核心思想"><span class="header-section-number">5.6.1</span> 🎯 核心思想</h3>
+<blockquote class="blockquote">
+<p>反向传播 = 链式法则 + 从后往前计算梯度</p>
+</blockquote>
+<p><strong>目标</strong>：计算 ∂L/∂W⁽ˡ⁾ 和 ∂L/∂b⁽ˡ⁾</p>
+</section>
+<section id="链式法则回顾" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="链式法则回顾"><span class="header-section-number">5.6.2</span> 📐 链式法则回顾</h3>
+<pre><code>如果 y = f(u) 且 u = g(x)
+则 dy/dx = (dy/du)·(du/dx)
+
+例子：
+y = (x² + 1)³
+令 u = x² + 1, 则 y = u³
+
+dy/dx = (dy/du)·(du/dx)
+      = 3u²·2x
+      = 3(x²+1)²·2x</code></pre>
+</section>
+<section id="反向传播推导" class="level3" data-number="5.6.3">
+<h3 data-number="5.6.3" class="anchored" data-anchor-id="反向传播推导"><span class="header-section-number">5.6.3</span> 🔄 反向传播推导</h3>
+<p><strong>网络结构</strong>：输入 → 隐藏层 → 输出层</p>
+<pre><code>前向传播：
+  z⁽¹⁾ = W⁽¹⁾x + b⁽¹⁾
+  a⁽¹⁾ = σ(z⁽¹⁾)
+  z⁽²⁾ = W⁽²⁾a⁽¹⁾ + b⁽²⁾
+  a⁽²⁾ = σ(z⁽²⁾) = ŷ
+
+损失：
+  L = (y - ŷ)²</code></pre>
+<p><strong>反向传播</strong>：</p>
+<p><strong>输出层</strong>：</p>
+<pre><code>∂L/∂ŷ = -2(y - ŷ)
+
+∂L/∂z⁽²⁾ = ∂L/∂ŷ · ∂ŷ/∂z⁽²⁾
+         = ∂L/∂ŷ · σ'(z⁽²⁾)
+
+∂L/∂W⁽²⁾ = ∂L/∂z⁽²⁾ · ∂z⁽²⁾/∂W⁽²⁾
+         = ∂L/∂z⁽²⁾ · a⁽¹⁾ᵀ
+
+∂L/∂b⁽²⁾ = ∂L/∂z⁽²⁾</code></pre>
+<p><strong>隐藏层</strong>：</p>
+<pre><code>∂L/∂a⁽¹⁾ = (W⁽²⁾)ᵀ · ∂L/∂z⁽²⁾
+
+∂L/∂z⁽¹⁾ = ∂L/∂a⁽¹⁾ ⊙ σ'(z⁽¹⁾)
+         (⊙ 表示逐元素乘法)
+
+∂L/∂W⁽¹⁾ = ∂L/∂z⁽¹⁾ · xᵀ
+
+∂L/∂b⁽¹⁾ = ∂L/∂z⁽¹⁾</code></pre>
+</section>
+<section id="代码实现-1" class="level3" data-number="5.6.4">
+<h3 data-number="5.6.4" class="anchored" data-anchor-id="代码实现-1"><span class="header-section-number">5.6.4</span> 💻 代码实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> backward_propagation(X, Y, parameters, cache):</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">    反向传播</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">    参数：</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">        X: 输入 (n_features, m_samples)</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">        Y: 真实标签 (1, m_samples)</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">        parameters: 权重和偏置</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">        cache: 前向传播的中间值</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co">    返回：</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">        gradients: 梯度字典</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> X.shape[<span class="dv">1</span>]  <span class="co"># 样本数</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 获取参数</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    W1 <span class="op">=</span> parameters[<span class="st">'W1'</span>]</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>    W2 <span class="op">=</span> parameters[<span class="st">'W2'</span>]</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 获取前向传播的值</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>    A1 <span class="op">=</span> cache[<span class="st">'A1'</span>]</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>    A2 <span class="op">=</span> cache[<span class="st">'A2'</span>]</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 输出层梯度</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>    dZ2 <span class="op">=</span> A2 <span class="op">-</span> Y  <span class="co"># 对于 sigmoid + MSE</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>    dW2 <span class="op">=</span> (<span class="dv">1</span><span class="op">/</span>m) <span class="op">*</span> np.dot(dZ2, A1.T)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>    db2 <span class="op">=</span> (<span class="dv">1</span><span class="op">/</span>m) <span class="op">*</span> np.<span class="bu">sum</span>(dZ2, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 隐藏层梯度</span></span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>    dA1 <span class="op">=</span> np.dot(W2.T, dZ2)</span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>    dZ1 <span class="op">=</span> dA1 <span class="op">*</span> A1 <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> A1)  <span class="co"># sigmoid 的导数</span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>    dW1 <span class="op">=</span> (<span class="dv">1</span><span class="op">/</span>m) <span class="op">*</span> np.dot(dZ1, X.T)</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>    db1 <span class="op">=</span> (<span class="dv">1</span><span class="op">/</span>m) <span class="op">*</span> np.<span class="bu">sum</span>(dZ1, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>    gradients <span class="op">=</span> {</span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'dW1'</span>: dW1,</span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">'db1'</span>: db1,</span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">'dW2'</span>: dW2,</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">'db2'</span>: db2</span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> gradients</span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_parameters(parameters, gradients, learning_rate):</span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a><span class="co">    更新参数</span></span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>    parameters[<span class="st">'W1'</span>] <span class="op">-=</span> learning_rate <span class="op">*</span> gradients[<span class="st">'dW1'</span>]</span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a>    parameters[<span class="st">'b1'</span>] <span class="op">-=</span> learning_rate <span class="op">*</span> gradients[<span class="st">'db1'</span>]</span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>    parameters[<span class="st">'W2'</span>] <span class="op">-=</span> learning_rate <span class="op">*</span> gradients[<span class="st">'dW2'</span>]</span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a>    parameters[<span class="st">'b2'</span>] <span class="op">-=</span> learning_rate <span class="op">*</span> gradients[<span class="st">'db2'</span>]</span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="完整训练循环" class="level3" data-number="5.6.5">
+<h3 data-number="5.6.5" class="anchored" data-anchor-id="完整训练循环"><span class="header-section-number">5.6.5</span> 🔁 完整训练循环</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_neural_network(X, Y, hidden_size<span class="op">=</span><span class="dv">4</span>, learning_rate<span class="op">=</span><span class="fl">0.01</span>, epochs<span class="op">=</span><span class="dv">10000</span>):</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">    训练神经网络</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    n_x <span class="op">=</span> X.shape[<span class="dv">0</span>]  <span class="co"># 输入特征数</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    n_y <span class="op">=</span> Y.shape[<span class="dv">0</span>]  <span class="co"># 输出数</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 初始化参数</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    parameters <span class="op">=</span> {</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'W1'</span>: np.random.randn(hidden_size, n_x) <span class="op">*</span> <span class="fl">0.01</span>,</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'b1'</span>: np.zeros((hidden_size, <span class="dv">1</span>)),</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'W2'</span>: np.random.randn(n_y, hidden_size) <span class="op">*</span> <span class="fl">0.01</span>,</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'b2'</span>: np.zeros((n_y, <span class="dv">1</span>))</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>    losses <span class="op">=</span> []</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 前向传播</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>        A2, cache <span class="op">=</span> forward_propagation(X, parameters)</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 计算损失</span></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> np.mean((A2 <span class="op">-</span> Y) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>        losses.append(loss)</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 反向传播</span></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>        gradients <span class="op">=</span> backward_propagation(X, Y, parameters, cache)</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 更新参数</span></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>        parameters <span class="op">=</span> update_parameters(parameters, gradients, learning_rate)</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 打印进度</span></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> epoch <span class="op">%</span> <span class="dv">1000</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">: Loss = </span><span class="sc">{</span>loss<span class="sc">:.6f}</span><span class="ss">"</span>)</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> parameters, losses</span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 示例：解决 XOR 问题</span></span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>],</span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>              [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]])</span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>]])</span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>parameters, losses <span class="op">=</span> train_neural_network(</span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>    X, Y,</span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a>    hidden_size<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">10000</span></span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a><span class="co"># 测试</span></span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>A2, _ <span class="op">=</span> forward_propagation(X, parameters)</span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">输入:"</span>)</span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.T)</span>
+<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">预测:"</span>)</span>
+<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A2.T)</span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">真实标签:"</span>)</span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Y.T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>输出</strong>：</p>
+<pre><code>Epoch 0: Loss = 0.250615
+Epoch 1000: Loss = 0.062439
+Epoch 2000: Loss = 0.013152
+Epoch 3000: Loss = 0.005862
+Epoch 4000: Loss = 0.003494
+Epoch 5000: Loss = 0.002388
+Epoch 6000: Loss = 0.001756
+Epoch 7000: Loss = 0.001353
+Epoch 8000: Loss = 0.001081
+Epoch 9000: Loss = 0.000887
+
+输入:
+[[0 0]
+ [0 1]
+ [1 0]
+ [1 1]]
+
+预测:
+[[0.02458917]
+ [0.97201347]
+ [0.97412658]
+ [0.02907213]]
+
+真实标签:
+[[0]
+ [1]
+ [1]
+ [0]]</code></pre>
+<p>成功解决了 XOR 问题！🎉</p>
+<hr>
+</section>
+</section>
+<section id="初始化策略" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="初始化策略"><span class="header-section-number">5.7</span> 4.6 初始化策略</h2>
+<section id="为什么初始化重要" class="level3" data-number="5.7.1">
+<h3 data-number="5.7.1" class="anchored" data-anchor-id="为什么初始化重要"><span class="header-section-number">5.7.1</span> 🤔 为什么初始化重要？</h3>
+<p><strong>全零初始化</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> np.zeros((n_out, n_in))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>问题</strong>：所有神经元学到相同的特征（对称性问题）</p>
+<p><strong>随机初始化</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> np.random.randn(n_out, n_in)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>问题</strong>：方差可能太大或太小</p>
+</section>
+<section id="好的初始化方法" class="level3" data-number="5.7.2">
+<h3 data-number="5.7.2" class="anchored" data-anchor-id="好的初始化方法"><span class="header-section-number">5.7.2</span> ✅ 好的初始化方法</h3>
+<section id="xavier-初始化-glorot" class="level4" data-number="5.7.2.1">
+<h4 data-number="5.7.2.1" class="anchored" data-anchor-id="xavier-初始化-glorot"><span class="header-section-number">5.7.2.1</span> <strong>1. Xavier 初始化</strong> (Glorot)</h4>
+<p><strong>适用于</strong>：Sigmoid / Tanh</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> np.random.randn(n_out, n_in) <span class="op">*</span> np.sqrt(<span class="dv">1</span> <span class="op">/</span> n_in)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> np.random.randn(n_out, n_in) <span class="op">*</span> np.sqrt(<span class="dv">2</span> <span class="op">/</span> (n_in <span class="op">+</span> n_out))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>原理</strong>：保持方差在各层之间平衡</p>
+</section>
+<section id="he-初始化" class="level4" data-number="5.7.2.2">
+<h4 data-number="5.7.2.2" class="anchored" data-anchor-id="he-初始化"><span class="header-section-number">5.7.2.2</span> <strong>2. He 初始化</strong></h4>
+<p><strong>适用于</strong>：ReLU 及其变种</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> np.random.randn(n_out, n_in) <span class="op">*</span> np.sqrt(<span class="dv">2</span> <span class="op">/</span> n_in)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>原理</strong>：考虑 ReLU 会”杀死”一半神经元</p>
+</section>
+</section>
+<section id="实现" class="level3" data-number="5.7.3">
+<h3 data-number="5.7.3" class="anchored" data-anchor-id="实现"><span class="header-section-number">5.7.3</span> 💻 实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> initialize_parameters_xavier(layer_dims):</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Xavier 初始化</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co">    参数：</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co">        layer_dims: 列表，每层的神经元数量</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co">                   例如 [784, 128, 64, 10]</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    parameters <span class="op">=</span> {}</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    L <span class="op">=</span> <span class="bu">len</span>(layer_dims)</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, L):</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>        parameters[<span class="ss">f'W</span><span class="sc">{</span>l<span class="sc">}</span><span class="ss">'</span>] <span class="op">=</span> np.random.randn(</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>            layer_dims[l],</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>            layer_dims[l<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>        ) <span class="op">*</span> np.sqrt(<span class="dv">1</span> <span class="op">/</span> layer_dims[l<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>        parameters[<span class="ss">f'b</span><span class="sc">{</span>l<span class="sc">}</span><span class="ss">'</span>] <span class="op">=</span> np.zeros((layer_dims[l], <span class="dv">1</span>))</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> parameters</span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> initialize_parameters_he(layer_dims):</span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a><span class="co">    He 初始化</span></span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>    parameters <span class="op">=</span> {}</span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>    L <span class="op">=</span> <span class="bu">len</span>(layer_dims)</span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, L):</span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>        parameters[<span class="ss">f'W</span><span class="sc">{</span>l<span class="sc">}</span><span class="ss">'</span>] <span class="op">=</span> np.random.randn(</span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>            layer_dims[l],</span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>            layer_dims[l<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>        ) <span class="op">*</span> np.sqrt(<span class="dv">2</span> <span class="op">/</span> layer_dims[l<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>        parameters[<span class="ss">f'b</span><span class="sc">{</span>l<span class="sc">}</span><span class="ss">'</span>] <span class="op">=</span> np.zeros((layer_dims[l], <span class="dv">1</span>))</span>
+<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="梯度检验-gradient-checking" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="梯度检验-gradient-checking"><span class="header-section-number">5.8</span> 4.7 梯度检验 (Gradient Checking)</h2>
+<section id="目的" class="level3" data-number="5.8.1">
+<h3 data-number="5.8.1" class="anchored" data-anchor-id="目的"><span class="header-section-number">5.8.1</span> 🎯 目的</h3>
+<p>验证反向传播的实现是否正确</p>
+</section>
+<section id="数值梯度" class="level3" data-number="5.8.2">
+<h3 data-number="5.8.2" class="anchored" data-anchor-id="数值梯度"><span class="header-section-number">5.8.2</span> 📐 数值梯度</h3>
+<pre><code>f'(θ) ≈ [f(θ + ε) - f(θ - ε)] / (2ε)
+
+通常 ε = 10⁻⁷</code></pre>
+</section>
+<section id="实现-1" class="level3" data-number="5.8.3">
+<h3 data-number="5.8.3" class="anchored" data-anchor-id="实现-1"><span class="header-section-number">5.8.3</span> 💻 实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gradient_check(parameters, gradients, X, Y, epsilon<span class="op">=</span><span class="fl">1e-7</span>):</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co">    梯度检验</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co">    返回：</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="co">        difference: 数值梯度和解析梯度的相对差异</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 将参数展平为向量</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    parameters_values, _ <span class="op">=</span> dictionary_to_vector(parameters)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    grad <span class="op">=</span> gradients_to_vector(gradients)</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    num_parameters <span class="op">=</span> parameters_values.shape[<span class="dv">0</span>]</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 计算数值梯度</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>    J_plus <span class="op">=</span> np.zeros((num_parameters, <span class="dv">1</span>))</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>    J_minus <span class="op">=</span> np.zeros((num_parameters, <span class="dv">1</span>))</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>    gradapprox <span class="op">=</span> np.zeros((num_parameters, <span class="dv">1</span>))</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_parameters):</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 计算 J_plus[i]</span></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>        thetaplus <span class="op">=</span> np.copy(parameters_values)</span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>        thetaplus[i][<span class="dv">0</span>] <span class="op">+=</span> epsilon</span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>        J_plus[i] <span class="op">=</span> forward_propagation_cost(X, Y, vector_to_dictionary(thetaplus))</span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 计算 J_minus[i]</span></span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>        thetaminus <span class="op">=</span> np.copy(parameters_values)</span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>        thetaminus[i][<span class="dv">0</span>] <span class="op">-=</span> epsilon</span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a>        J_minus[i] <span class="op">=</span> forward_propagation_cost(X, Y, vector_to_dictionary(thetaminus))</span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 计算数值梯度</span></span>
+<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a>        gradapprox[i] <span class="op">=</span> (J_plus[i] <span class="op">-</span> J_minus[i]) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> epsilon)</span>
+<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-32"><a href="#cb45-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 计算相对差异</span></span>
+<span id="cb45-33"><a href="#cb45-33" aria-hidden="true" tabindex="-1"></a>    numerator <span class="op">=</span> np.linalg.norm(grad <span class="op">-</span> gradapprox)</span>
+<span id="cb45-34"><a href="#cb45-34" aria-hidden="true" tabindex="-1"></a>    denominator <span class="op">=</span> np.linalg.norm(grad) <span class="op">+</span> np.linalg.norm(gradapprox)</span>
+<span id="cb45-35"><a href="#cb45-35" aria-hidden="true" tabindex="-1"></a>    difference <span class="op">=</span> numerator <span class="op">/</span> denominator</span>
+<span id="cb45-36"><a href="#cb45-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-37"><a href="#cb45-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> difference <span class="op">&gt;</span> <span class="fl">2e-7</span>:</span>
+<span id="cb45-38"><a href="#cb45-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"⚠️  梯度检验失败！差异 = </span><span class="sc">{</span>difference<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb45-39"><a href="#cb45-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb45-40"><a href="#cb45-40" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"✅ 梯度检验通过！差异 = </span><span class="sc">{</span>difference<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb45-41"><a href="#cb45-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-42"><a href="#cb45-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> difference</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="使用深度学习框架" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="使用深度学习框架"><span class="header-section-number">5.9</span> 4.8 使用深度学习框架</h2>
+<section id="pytorch-实现" class="level3" data-number="5.9.1">
+<h3 data-number="5.9.1" class="anchored" data-anchor-id="pytorch-实现"><span class="header-section-number">5.9.1</span> 🔥 PyTorch 实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> DataLoader, TensorDataset</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 定义网络</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> NeuralNetwork(nn.Module):</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size, output_size):</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(NeuralNetwork, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc1 <span class="op">=</span> nn.Linear(input_size, hidden_size)</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.relu <span class="op">=</span> nn.ReLU()</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc2 <span class="op">=</span> nn.Linear(hidden_size, output_size)</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.sigmoid <span class="op">=</span> nn.Sigmoid()</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc1(x)</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.relu(x)</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc2(x)</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.sigmoid(x)</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 准备数据</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> torch.tensor([[<span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">1</span>, <span class="dv">1</span>]], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> torch.tensor([[<span class="dv">0</span>], [<span class="dv">1</span>], [<span class="dv">1</span>], [<span class="dv">0</span>]], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 创建模型</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NeuralNetwork(input_size<span class="op">=</span><span class="dv">2</span>, hidden_size<span class="op">=</span><span class="dv">4</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 定义损失函数和优化器</span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 训练</span></span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">5000</span></span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 前向传播</span></span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> model(X_train)</span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(outputs, y_train)</span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 反向传播</span></span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()  <span class="co"># 清零梯度</span></span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>    loss.backward()        <span class="co"># 计算梯度</span></span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>    optimizer.step()       <span class="co"># 更新参数</span></span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> epoch <span class="op">%</span> <span class="dv">500</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'Epoch [</span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.6f}</span><span class="ss">'</span>)</span>
+<span id="cb46-47"><a href="#cb46-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-48"><a href="#cb46-48" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 测试</span></span>
+<span id="cb46-49"><a href="#cb46-49" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb46-50"><a href="#cb46-50" aria-hidden="true" tabindex="-1"></a>    predictions <span class="op">=</span> model(X_train)</span>
+<span id="cb46-51"><a href="#cb46-51" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">预测结果:"</span>)</span>
+<span id="cb46-52"><a href="#cb46-52" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(predictions.numpy())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="tensorflowkeras-实现" class="level3" data-number="5.9.2">
+<h3 data-number="5.9.2" class="anchored" data-anchor-id="tensorflowkeras-实现"><span class="header-section-number">5.9.2</span> 🌐 TensorFlow/Keras 实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 准备数据</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">1</span>, <span class="dv">1</span>]])</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> np.array([[<span class="dv">0</span>], [<span class="dv">1</span>], [<span class="dv">1</span>], [<span class="dv">0</span>]])</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 构建模型</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> keras.Sequential([</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    keras.layers.Dense(<span class="dv">4</span>, activation<span class="op">=</span><span class="st">'relu'</span>, input_shape<span class="op">=</span>(<span class="dv">2</span>,)),</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    keras.layers.Dense(<span class="dv">1</span>, activation<span class="op">=</span><span class="st">'sigmoid'</span>)</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 编译模型</span></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">compile</span>(</span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span><span class="st">'adam'</span>,</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>    loss<span class="op">=</span><span class="st">'mse'</span>,</span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>    metrics<span class="op">=</span>[<span class="st">'accuracy'</span>]</span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 训练</span></span>
+<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> model.fit(</span>
+<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>    X_train, y_train,</span>
+<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">5000</span>,</span>
+<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">0</span>  <span class="co"># 不打印训练过程</span></span>
+<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 评估</span></span>
+<span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a>loss, accuracy <span class="op">=</span> model.evaluate(X_train, y_train, verbose<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb47-31"><a href="#cb47-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Loss: </span><span class="sc">{</span>loss<span class="sc">:.6f}</span><span class="ss">'</span>)</span>
+<span id="cb47-32"><a href="#cb47-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-33"><a href="#cb47-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 预测</span></span>
+<span id="cb47-34"><a href="#cb47-34" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> model.predict(X_train)</span>
+<span id="cb47-35"><a href="#cb47-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">预测结果:"</span>)</span>
+<span id="cb47-36"><a href="#cb47-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predictions)</span>
+<span id="cb47-37"><a href="#cb47-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-38"><a href="#cb47-38" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. 查看模型结构</span></span>
+<span id="cb47-39"><a href="#cb47-39" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="实战mnist-手写数字识别深度网络" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="实战mnist-手写数字识别深度网络"><span class="header-section-number">5.10</span> 4.9 实战：MNIST 手写数字识别（深度网络）</h2>
+<section id="完整实现" class="level3" data-number="5.10.1">
+<h3 data-number="5.10.1" class="anchored" data-anchor-id="完整实现"><span class="header-section-number">5.10.1</span> 💻 完整实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> DataLoader</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision <span class="im">import</span> datasets, transforms</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 数据加载和预处理</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> transforms.Compose([</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>    transforms.Normalize((<span class="fl">0.1307</span>,), (<span class="fl">0.3081</span>,))  <span class="co"># MNIST 的均值和标准差</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>train_dataset <span class="op">=</span> datasets.MNIST(</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>    root<span class="op">=</span><span class="st">'./data'</span>,</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>    train<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>    download<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>    transform<span class="op">=</span>transform</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>test_dataset <span class="op">=</span> datasets.MNIST(</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>    root<span class="op">=</span><span class="st">'./data'</span>,</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>    train<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>    download<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>    transform<span class="op">=</span>transform</span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_dataset, batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(test_dataset, batch_size<span class="op">=</span><span class="dv">1000</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 定义深度神经网络</span></span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DeepNN(nn.Module):</span>
+<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(DeepNN, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc1 <span class="op">=</span> nn.Linear(<span class="dv">28</span><span class="op">*</span><span class="dv">28</span>, <span class="dv">512</span>)</span>
+<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc2 <span class="op">=</span> nn.Linear(<span class="dv">512</span>, <span class="dv">256</span>)</span>
+<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc3 <span class="op">=</span> nn.Linear(<span class="dv">256</span>, <span class="dv">128</span>)</span>
+<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc4 <span class="op">=</span> nn.Linear(<span class="dv">128</span>, <span class="dv">10</span>)</span>
+<span id="cb48-39"><a href="#cb48-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-40"><a href="#cb48-40" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.relu <span class="op">=</span> nn.ReLU()</span>
+<span id="cb48-41"><a href="#cb48-41" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dropout <span class="op">=</span> nn.Dropout(<span class="fl">0.2</span>)</span>
+<span id="cb48-42"><a href="#cb48-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-43"><a href="#cb48-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb48-44"><a href="#cb48-44" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x.view(<span class="op">-</span><span class="dv">1</span>, <span class="dv">28</span><span class="op">*</span><span class="dv">28</span>)  <span class="co"># 展平</span></span>
+<span id="cb48-45"><a href="#cb48-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-46"><a href="#cb48-46" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc1(x)</span>
+<span id="cb48-47"><a href="#cb48-47" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.relu(x)</span>
+<span id="cb48-48"><a href="#cb48-48" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.dropout(x)</span>
+<span id="cb48-49"><a href="#cb48-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-50"><a href="#cb48-50" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc2(x)</span>
+<span id="cb48-51"><a href="#cb48-51" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.relu(x)</span>
+<span id="cb48-52"><a href="#cb48-52" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.dropout(x)</span>
+<span id="cb48-53"><a href="#cb48-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-54"><a href="#cb48-54" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc3(x)</span>
+<span id="cb48-55"><a href="#cb48-55" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.relu(x)</span>
+<span id="cb48-56"><a href="#cb48-56" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.dropout(x)</span>
+<span id="cb48-57"><a href="#cb48-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-58"><a href="#cb48-58" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc4(x)</span>
+<span id="cb48-59"><a href="#cb48-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span>
+<span id="cb48-60"><a href="#cb48-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-61"><a href="#cb48-61" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 初始化模型</span></span>
+<span id="cb48-62"><a href="#cb48-62" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">'cuda'</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">'cpu'</span>)</span>
+<span id="cb48-63"><a href="#cb48-63" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> DeepNN().to(device)</span>
+<span id="cb48-64"><a href="#cb48-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-65"><a href="#cb48-65" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 定义损失和优化器</span></span>
+<span id="cb48-66"><a href="#cb48-66" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
+<span id="cb48-67"><a href="#cb48-67" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.001</span>)</span>
+<span id="cb48-68"><a href="#cb48-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-69"><a href="#cb48-69" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 训练函数</span></span>
+<span id="cb48-70"><a href="#cb48-70" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(model, device, train_loader, optimizer, epoch):</span>
+<span id="cb48-71"><a href="#cb48-71" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
+<span id="cb48-72"><a href="#cb48-72" aria-hidden="true" tabindex="-1"></a>    train_loss <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb48-73"><a href="#cb48-73" aria-hidden="true" tabindex="-1"></a>    correct <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb48-74"><a href="#cb48-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-75"><a href="#cb48-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> batch_idx, (data, target) <span class="kw">in</span> <span class="bu">enumerate</span>(train_loader):</span>
+<span id="cb48-76"><a href="#cb48-76" aria-hidden="true" tabindex="-1"></a>        data, target <span class="op">=</span> data.to(device), target.to(device)</span>
+<span id="cb48-77"><a href="#cb48-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-78"><a href="#cb48-78" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb48-79"><a href="#cb48-79" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> model(data)</span>
+<span id="cb48-80"><a href="#cb48-80" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> criterion(output, target)</span>
+<span id="cb48-81"><a href="#cb48-81" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
+<span id="cb48-82"><a href="#cb48-82" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
+<span id="cb48-83"><a href="#cb48-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-84"><a href="#cb48-84" aria-hidden="true" tabindex="-1"></a>        train_loss <span class="op">+=</span> loss.item()</span>
+<span id="cb48-85"><a href="#cb48-85" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> output.argmax(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb48-86"><a href="#cb48-86" aria-hidden="true" tabindex="-1"></a>        correct <span class="op">+=</span> pred.eq(target.view_as(pred)).<span class="bu">sum</span>().item()</span>
+<span id="cb48-87"><a href="#cb48-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-88"><a href="#cb48-88" aria-hidden="true" tabindex="-1"></a>    train_loss <span class="op">/=</span> <span class="bu">len</span>(train_loader)</span>
+<span id="cb48-89"><a href="#cb48-89" aria-hidden="true" tabindex="-1"></a>    accuracy <span class="op">=</span> <span class="fl">100.</span> <span class="op">*</span> correct <span class="op">/</span> <span class="bu">len</span>(train_loader.dataset)</span>
+<span id="cb48-90"><a href="#cb48-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-91"><a href="#cb48-91" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'Epoch: </span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">, Loss: </span><span class="sc">{</span>train_loss<span class="sc">:.4f}</span><span class="ss">, Accuracy: </span><span class="sc">{</span>accuracy<span class="sc">:.2f}</span><span class="ss">%'</span>)</span>
+<span id="cb48-92"><a href="#cb48-92" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> train_loss, accuracy</span>
+<span id="cb48-93"><a href="#cb48-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-94"><a href="#cb48-94" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 测试函数</span></span>
+<span id="cb48-95"><a href="#cb48-95" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test(model, device, test_loader):</span>
+<span id="cb48-96"><a href="#cb48-96" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb48-97"><a href="#cb48-97" aria-hidden="true" tabindex="-1"></a>    test_loss <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb48-98"><a href="#cb48-98" aria-hidden="true" tabindex="-1"></a>    correct <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb48-99"><a href="#cb48-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-100"><a href="#cb48-100" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb48-101"><a href="#cb48-101" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> data, target <span class="kw">in</span> test_loader:</span>
+<span id="cb48-102"><a href="#cb48-102" aria-hidden="true" tabindex="-1"></a>            data, target <span class="op">=</span> data.to(device), target.to(device)</span>
+<span id="cb48-103"><a href="#cb48-103" aria-hidden="true" tabindex="-1"></a>            output <span class="op">=</span> model(data)</span>
+<span id="cb48-104"><a href="#cb48-104" aria-hidden="true" tabindex="-1"></a>            test_loss <span class="op">+=</span> criterion(output, target).item()</span>
+<span id="cb48-105"><a href="#cb48-105" aria-hidden="true" tabindex="-1"></a>            pred <span class="op">=</span> output.argmax(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb48-106"><a href="#cb48-106" aria-hidden="true" tabindex="-1"></a>            correct <span class="op">+=</span> pred.eq(target.view_as(pred)).<span class="bu">sum</span>().item()</span>
+<span id="cb48-107"><a href="#cb48-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-108"><a href="#cb48-108" aria-hidden="true" tabindex="-1"></a>    test_loss <span class="op">/=</span> <span class="bu">len</span>(test_loader)</span>
+<span id="cb48-109"><a href="#cb48-109" aria-hidden="true" tabindex="-1"></a>    accuracy <span class="op">=</span> <span class="fl">100.</span> <span class="op">*</span> correct <span class="op">/</span> <span class="bu">len</span>(test_loader.dataset)</span>
+<span id="cb48-110"><a href="#cb48-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-111"><a href="#cb48-111" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'Test Loss: </span><span class="sc">{</span>test_loss<span class="sc">:.4f}</span><span class="ss">, Accuracy: </span><span class="sc">{</span>accuracy<span class="sc">:.2f}</span><span class="ss">%</span><span class="ch">\n</span><span class="ss">'</span>)</span>
+<span id="cb48-112"><a href="#cb48-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> test_loss, accuracy</span>
+<span id="cb48-113"><a href="#cb48-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-114"><a href="#cb48-114" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. 训练模型</span></span>
+<span id="cb48-115"><a href="#cb48-115" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb48-116"><a href="#cb48-116" aria-hidden="true" tabindex="-1"></a>train_losses, train_accs <span class="op">=</span> [], []</span>
+<span id="cb48-117"><a href="#cb48-117" aria-hidden="true" tabindex="-1"></a>test_losses, test_accs <span class="op">=</span> [], []</span>
+<span id="cb48-118"><a href="#cb48-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-119"><a href="#cb48-119" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, epochs <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb48-120"><a href="#cb48-120" aria-hidden="true" tabindex="-1"></a>    train_loss, train_acc <span class="op">=</span> train(model, device, train_loader, optimizer, epoch)</span>
+<span id="cb48-121"><a href="#cb48-121" aria-hidden="true" tabindex="-1"></a>    test_loss, test_acc <span class="op">=</span> test(model, device, test_loader)</span>
+<span id="cb48-122"><a href="#cb48-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-123"><a href="#cb48-123" aria-hidden="true" tabindex="-1"></a>    train_losses.append(train_loss)</span>
+<span id="cb48-124"><a href="#cb48-124" aria-hidden="true" tabindex="-1"></a>    train_accs.append(train_acc)</span>
+<span id="cb48-125"><a href="#cb48-125" aria-hidden="true" tabindex="-1"></a>    test_losses.append(test_loss)</span>
+<span id="cb48-126"><a href="#cb48-126" aria-hidden="true" tabindex="-1"></a>    test_accs.append(test_acc)</span>
+<span id="cb48-127"><a href="#cb48-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-128"><a href="#cb48-128" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. 可视化训练过程</span></span>
+<span id="cb48-129"><a href="#cb48-129" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">5</span>))</span>
+<span id="cb48-130"><a href="#cb48-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-131"><a href="#cb48-131" aria-hidden="true" tabindex="-1"></a>ax1.plot(train_losses, label<span class="op">=</span><span class="st">'Train Loss'</span>)</span>
+<span id="cb48-132"><a href="#cb48-132" aria-hidden="true" tabindex="-1"></a>ax1.plot(test_losses, label<span class="op">=</span><span class="st">'Test Loss'</span>)</span>
+<span id="cb48-133"><a href="#cb48-133" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb48-134"><a href="#cb48-134" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">'Loss'</span>)</span>
+<span id="cb48-135"><a href="#cb48-135" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'Training and Test Loss'</span>)</span>
+<span id="cb48-136"><a href="#cb48-136" aria-hidden="true" tabindex="-1"></a>ax1.legend()</span>
+<span id="cb48-137"><a href="#cb48-137" aria-hidden="true" tabindex="-1"></a>ax1.grid(<span class="va">True</span>)</span>
+<span id="cb48-138"><a href="#cb48-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-139"><a href="#cb48-139" aria-hidden="true" tabindex="-1"></a>ax2.plot(train_accs, label<span class="op">=</span><span class="st">'Train Accuracy'</span>)</span>
+<span id="cb48-140"><a href="#cb48-140" aria-hidden="true" tabindex="-1"></a>ax2.plot(test_accs, label<span class="op">=</span><span class="st">'Test Accuracy'</span>)</span>
+<span id="cb48-141"><a href="#cb48-141" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb48-142"><a href="#cb48-142" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">'Accuracy (%)'</span>)</span>
+<span id="cb48-143"><a href="#cb48-143" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Training and Test Accuracy'</span>)</span>
+<span id="cb48-144"><a href="#cb48-144" aria-hidden="true" tabindex="-1"></a>ax2.legend()</span>
+<span id="cb48-145"><a href="#cb48-145" aria-hidden="true" tabindex="-1"></a>ax2.grid(<span class="va">True</span>)</span>
+<span id="cb48-146"><a href="#cb48-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-147"><a href="#cb48-147" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb48-148"><a href="#cb48-148" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb48-149"><a href="#cb48-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-150"><a href="#cb48-150" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. 可视化一些预测结果</span></span>
+<span id="cb48-151"><a href="#cb48-151" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb48-152"><a href="#cb48-152" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb48-153"><a href="#cb48-153" aria-hidden="true" tabindex="-1"></a>    data, target <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(test_loader))</span>
+<span id="cb48-154"><a href="#cb48-154" aria-hidden="true" tabindex="-1"></a>    data, target <span class="op">=</span> data.to(device), target.to(device)</span>
+<span id="cb48-155"><a href="#cb48-155" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> model(data)</span>
+<span id="cb48-156"><a href="#cb48-156" aria-hidden="true" tabindex="-1"></a>    pred <span class="op">=</span> output.argmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb48-157"><a href="#cb48-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-158"><a href="#cb48-158" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 显示前16个样本</span></span>
+<span id="cb48-159"><a href="#cb48-159" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">4</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="cb48-160"><a href="#cb48-160" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axes.flat):</span>
+<span id="cb48-161"><a href="#cb48-161" aria-hidden="true" tabindex="-1"></a>        image <span class="op">=</span> data[i].cpu().squeeze()</span>
+<span id="cb48-162"><a href="#cb48-162" aria-hidden="true" tabindex="-1"></a>        true_label <span class="op">=</span> target[i].item()</span>
+<span id="cb48-163"><a href="#cb48-163" aria-hidden="true" tabindex="-1"></a>        pred_label <span class="op">=</span> pred[i].item()</span>
+<span id="cb48-164"><a href="#cb48-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-165"><a href="#cb48-165" aria-hidden="true" tabindex="-1"></a>        ax.imshow(image, cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb48-166"><a href="#cb48-166" aria-hidden="true" tabindex="-1"></a>        color <span class="op">=</span> <span class="st">'green'</span> <span class="cf">if</span> true_label <span class="op">==</span> pred_label <span class="cf">else</span> <span class="st">'red'</span></span>
+<span id="cb48-167"><a href="#cb48-167" aria-hidden="true" tabindex="-1"></a>        ax.set_title(<span class="ss">f'True: </span><span class="sc">{</span>true_label<span class="sc">}</span><span class="ss">, Pred: </span><span class="sc">{</span>pred_label<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>color)</span>
+<span id="cb48-168"><a href="#cb48-168" aria-hidden="true" tabindex="-1"></a>        ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb48-169"><a href="#cb48-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-170"><a href="#cb48-170" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb48-171"><a href="#cb48-171" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="本章作业" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="本章作业"><span class="header-section-number">5.11</span> 📝 本章作业</h2>
+<section id="作业-1理论题" class="level3" data-number="5.11.1">
+<h3 data-number="5.11.1" class="anchored" data-anchor-id="作业-1理论题"><span class="header-section-number">5.11.1</span> 作业 1：理论题</h3>
+<ol type="1">
+<li><strong>激活函数选择</strong>
+<ul>
+<li>为什么 ReLU 比 Sigmoid 更常用？</li>
+<li>什么是 “Dead ReLU” 问题？如何解决？</li>
+<li>在什么情况下仍然使用 Sigmoid？</li>
+</ul></li>
+<li><strong>反向传播理解</strong>
+<ul>
+<li>用自己的话解释反向传播</li>
+<li>为什么叫”反向”传播？</li>
+<li>画出一个3层网络的计算图</li>
+</ul></li>
+<li><strong>初始化策略</strong>
+<ul>
+<li>为什么不能全零初始化？</li>
+<li>Xavier 和 He 初始化的区别？</li>
+<li>偏置需要特殊初始化吗？</li>
+</ul></li>
+</ol>
+</section>
+<section id="作业-2编程实践" class="level3" data-number="5.11.2">
+<h3 data-number="5.11.2" class="anchored" data-anchor-id="作业-2编程实践"><span class="header-section-number">5.11.2</span> 作业 2：编程实践</h3>
+<section id="任务-1从零实现多层网络" class="level4" data-number="5.11.2.1">
+<h4 data-number="5.11.2.1" class="anchored" data-anchor-id="任务-1从零实现多层网络"><span class="header-section-number">5.11.2.1</span> 任务 1：从零实现多层网络</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 实现一个L层全连接网络</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DeepNeuralNetwork:</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, layer_dims):</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="co">        layer_dims: 每层的神经元数量</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co">                   例如 [784, 128, 64, 10]</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, X):</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""前向传播"""</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> backward(<span class="va">self</span>, X, Y):</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""反向传播"""</span></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> train(<span class="va">self</span>, X, Y, epochs, learning_rate):</span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""训练"""</span></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">:</span></span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 支持任意层数</span></span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 支持不同激活函数（ReLU, Sigmoid, Tanh）</span></span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 实现梯度检验</span></span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 在 MNIST 上测试</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="任务-2激活函数对比实验" class="level4" data-number="5.11.2.2">
+<h4 data-number="5.11.2.2" class="anchored" data-anchor-id="任务-2激活函数对比实验"><span class="header-section-number">5.11.2.2</span> 任务 2：激活函数对比实验</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在相同数据集上对比不同激活函数的效果</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Sigmoid</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Tanh</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. ReLU</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Leaky ReLU</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 记录：</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co"># - 训练速度（达到90%准确率需要的epoch数）</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="co"># - 最终准确率</span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="co"># - 训练稳定性</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 画出训练曲线对比图</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="任务-3深度网络实验" class="level4" data-number="5.11.2.3">
+<h4 data-number="5.11.2.3" class="anchored" data-anchor-id="任务-3深度网络实验"><span class="header-section-number">5.11.2.3</span> 任务 3：深度网络实验</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在 Fashion-MNIST 上对比不同深度的网络</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 2层：784 → 128 → 10</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 3层：784 → 256 → 128 → 10</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 4层：784 → 512 → 256 → 128 → 10</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 5层：784 → 512 → 256 → 128 → 64 → 10</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 分析：</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="co"># - 是否越深越好？</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co"># - 观察梯度消失/爆炸现象</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="co"># - 尝试不同的初始化方法</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+</section>
+<section id="本章关键概念" class="level2" data-number="5.12">
+<h2 data-number="5.12" class="anchored" data-anchor-id="本章关键概念"><span class="header-section-number">5.12</span> 🔑 本章关键概念</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>神经网络</td>
+<td>多层感知机的堆叠</td>
+</tr>
+<tr class="even">
+<td>前向传播</td>
+<td>从输入计算到输出</td>
+</tr>
+<tr class="odd">
+<td>反向传播</td>
+<td>用链式法则计算梯度</td>
+</tr>
+<tr class="even">
+<td>激活函数</td>
+<td>引入非线性</td>
+</tr>
+<tr class="odd">
+<td>ReLU</td>
+<td>最常用的激活函数</td>
+</tr>
+<tr class="even">
+<td>Sigmoid</td>
+<td>输出层（二元分类）</td>
+</tr>
+<tr class="odd">
+<td>Softmax</td>
+<td>输出层（多元分类）</td>
+</tr>
+<tr class="even">
+<td>Xavier初始化</td>
+<td>适用于 Sigmoid/Tanh</td>
+</tr>
+<tr class="odd">
+<td>He初始化</td>
+<td>适用于 ReLU</td>
+</tr>
+<tr class="even">
+<td>梯度检验</td>
+<td>验证反向传播正确性</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="下一章预告" class="level2" data-number="5.13">
+<h2 data-number="5.13" class="anchored" data-anchor-id="下一章预告"><span class="header-section-number">5.13</span> 🎯 下一章预告</h2>
+<p><strong>第五章：优化算法与训练技巧</strong> - Mini-batch 梯度下降 - 动量 (Momentum) - RMSprop, Adam - Learning Rate Scheduling - Batch Normalization - Dropout - 正则化技术 - 调参技巧</p>
+<hr>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter3.html" class="pagination-link" aria-label="第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter5.html" class="pagination-link" aria-label="第五章：优化算法与训练技巧 (Optimization &amp; Training Tricks)">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">第五章：优化算法与训练技巧 (Optimization &amp; Training Tricks)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
