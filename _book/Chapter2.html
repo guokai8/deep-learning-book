@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; 第二章：回归 (Regression) – 深度学习完整教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter3.html" rel="next">
+<link href="./Chapter1.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5ea8f22911a6df30576a2a25a24cdd7a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">第一部分：基础篇</a></li><li class="breadcrumb-item"><a href="./Chapter2.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">第二章：回归 (Regression)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">深度学习完整教程</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">📋 课程整体框架</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一部分：基础篇</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">机器学习完整课程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">第二章：回归 (Regression)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">第四章：深度神经网络基础 (Deep Neural Networks)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二部分：进阶篇</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">第五章：优化算法与训练技巧 (Optimization &amp; Training Tricks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">第六章：卷积神经网络 (Convolutional Neural Networks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">第七章：循环神经网络 (Recurrent Neural Networks)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">第八章：Attention 与 Transformer</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三部分：实践与应用</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">第九章：迁移学习与微调 (Transfer Learning &amp; Fine-tuning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">第十章：强化学习 (Reinforcement Learning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">第十一章：无监督学习 (Unsupervised Learning)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">第十二章：可解释性与对抗攻击</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">第十三章：大语言模型时代</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#章节目标" id="toc-章节目标" class="nav-link active" data-scroll-target="#章节目标"><span class="header-section-number">3.1</span> 📌 章节目标</a></li>
+  <li><a href="#什么是回归" id="toc-什么是回归" class="nav-link" data-scroll-target="#什么是回归"><span class="header-section-number">3.2</span> 2.1 什么是回归？</a>
+  <ul class="collapse">
+  <li><a href="#定义" id="toc-定义" class="nav-link" data-scroll-target="#定义"><span class="header-section-number">3.2.1</span> 🎯 定义</a></li>
+  <li><a href="#回归-vs-分类" id="toc-回归-vs-分类" class="nav-link" data-scroll-target="#回归-vs-分类"><span class="header-section-number">3.2.2</span> 📊 回归 vs 分类</a></li>
+  </ul></li>
+  <li><a href="#案例宝可梦-cp-值预测" id="toc-案例宝可梦-cp-值预测" class="nav-link" data-scroll-target="#案例宝可梦-cp-值预测"><span class="header-section-number">3.3</span> 2.2 案例：宝可梦 CP 值预测</a>
+  <ul class="collapse">
+  <li><a href="#问题设定" id="toc-问题设定" class="nav-link" data-scroll-target="#问题设定"><span class="header-section-number">3.3.1</span> 🎮 问题设定</a></li>
+  </ul></li>
+  <li><a href="#step-1-定义模型-model" id="toc-step-1-定义模型-model" class="nav-link" data-scroll-target="#step-1-定义模型-model"><span class="header-section-number">3.4</span> 2.3 Step 1: 定义模型 (Model)</a>
+  <ul class="collapse">
+  <li><a href="#linear-model线性模型" id="toc-linear-model线性模型" class="nav-link" data-scroll-target="#linear-model线性模型"><span class="header-section-number">3.4.1</span> 🔹 Linear Model（线性模型）</a></li>
+  <li><a href="#可视化" id="toc-可视化" class="nav-link" data-scroll-target="#可视化"><span class="header-section-number">3.4.2</span> 📈 可视化</a></li>
+  <li><a href="#更复杂的模型" id="toc-更复杂的模型" class="nav-link" data-scroll-target="#更复杂的模型"><span class="header-section-number">3.4.3</span> 🔸 更复杂的模型</a></li>
+  </ul></li>
+  <li><a href="#step-2-损失函数-loss-function" id="toc-step-2-损失函数-loss-function" class="nav-link" data-scroll-target="#step-2-损失函数-loss-function"><span class="header-section-number">3.5</span> 2.4 Step 2: 损失函数 (Loss Function)</a>
+  <ul class="collapse">
+  <li><a href="#如何评估一个-function-的好坏" id="toc-如何评估一个-function-的好坏" class="nav-link" data-scroll-target="#如何评估一个-function-的好坏"><span class="header-section-number">3.5.1</span> 🎯 如何评估一个 function 的好坏？</a></li>
+  <li><a href="#mean-squared-error-mse" id="toc-mean-squared-error-mse" class="nav-link" data-scroll-target="#mean-squared-error-mse"><span class="header-section-number">3.5.2</span> 📐 Mean Squared Error (MSE)</a></li>
+  <li><a href="#例子计算" id="toc-例子计算" class="nav-link" data-scroll-target="#例子计算"><span class="header-section-number">3.5.3</span> 📊 例子计算</a></li>
+  <li><a href="#loss-function-是一个地形图" id="toc-loss-function-是一个地形图" class="nav-link" data-scroll-target="#loss-function-是一个地形图"><span class="header-section-number">3.5.4</span> 🗺️ Loss Function 是一个地形图</a></li>
+  </ul></li>
+  <li><a href="#step-3-梯度下降-gradient-descent" id="toc-step-3-梯度下降-gradient-descent" class="nav-link" data-scroll-target="#step-3-梯度下降-gradient-descent"><span class="header-section-number">3.6</span> 2.5 Step 3: 梯度下降 (Gradient Descent)</a>
+  <ul class="collapse">
+  <li><a href="#直观理解盲人下山" id="toc-直观理解盲人下山" class="nav-link" data-scroll-target="#直观理解盲人下山"><span class="header-section-number">3.6.1</span> 🏔️ 直观理解：盲人下山</a></li>
+  <li><a href="#数学公式" id="toc-数学公式" class="nav-link" data-scroll-target="#数学公式"><span class="header-section-number">3.6.2</span> 📐 数学公式</a></li>
+  <li><a href="#推导梯度公式" id="toc-推导梯度公式" class="nav-link" data-scroll-target="#推导梯度公式"><span class="header-section-number">3.6.3</span> 🧮 推导梯度公式</a></li>
+  <li><a href="#python-实现" id="toc-python-实现" class="nav-link" data-scroll-target="#python-实现"><span class="header-section-number">3.6.4</span> 💻 Python 实现</a></li>
+  </ul></li>
+  <li><a href="#可视化梯度下降过程" id="toc-可视化梯度下降过程" class="nav-link" data-scroll-target="#可视化梯度下降过程"><span class="header-section-number">3.7</span> 2.6 可视化梯度下降过程</a>
+  <ul class="collapse">
+  <li><a href="#loss-随训练变化" id="toc-loss-随训练变化" class="nav-link" data-scroll-target="#loss-随训练变化"><span class="header-section-number">3.7.1</span> 📉 Loss 随训练变化</a></li>
+  <li><a href="#参数在参数空间中的移动" id="toc-参数在参数空间中的移动" class="nav-link" data-scroll-target="#参数在参数空间中的移动"><span class="header-section-number">3.7.2</span> 🎯 参数在参数空间中的移动</a></li>
+  </ul></li>
+  <li><a href="#learning-rate-的影响" id="toc-learning-rate-的影响" class="nav-link" data-scroll-target="#learning-rate-的影响"><span class="header-section-number">3.8</span> 2.7 Learning Rate 的影响</a>
+  <ul class="collapse">
+  <li><a href="#不同学习率的表现" id="toc-不同学习率的表现" class="nav-link" data-scroll-target="#不同学习率的表现"><span class="header-section-number">3.8.1</span> ⚙️ 不同学习率的表现</a></li>
+  <li><a href="#如何选择-learning-rate" id="toc-如何选择-learning-rate" class="nav-link" data-scroll-target="#如何选择-learning-rate"><span class="header-section-number">3.8.2</span> 💡 如何选择 Learning Rate？</a></li>
+  </ul></li>
+  <li><a href="#多个特征的线性回归" id="toc-多个特征的线性回归" class="nav-link" data-scroll-target="#多个特征的线性回归"><span class="header-section-number">3.9</span> 2.8 多个特征的线性回归</a>
+  <ul class="collapse">
+  <li><a href="#从一个特征到多个特征" id="toc-从一个特征到多个特征" class="nav-link" data-scroll-target="#从一个特征到多个特征"><span class="header-section-number">3.9.1</span> 🔢 从一个特征到多个特征</a></li>
+  <li><a href="#向量化表示" id="toc-向量化表示" class="nav-link" data-scroll-target="#向量化表示"><span class="header-section-number">3.9.2</span> 📐 向量化表示</a></li>
+  <li><a href="#实现" id="toc-实现" class="nav-link" data-scroll-target="#实现"><span class="header-section-number">3.9.3</span> 💻 实现</a></li>
+  </ul></li>
+  <li><a href="#评估回归模型" id="toc-评估回归模型" class="nav-link" data-scroll-target="#评估回归模型"><span class="header-section-number">3.10</span> 2.9 评估回归模型</a>
+  <ul class="collapse">
+  <li><a href="#评估指标" id="toc-评估指标" class="nav-link" data-scroll-target="#评估指标"><span class="header-section-number">3.10.1</span> 📊 评估指标</a></li>
+  <li><a href="#计算评估指标" id="toc-计算评估指标" class="nav-link" data-scroll-target="#计算评估指标"><span class="header-section-number">3.10.2</span> 💻 计算评估指标</a></li>
+  </ul></li>
+  <li><a href="#训练集-vs-测试集" id="toc-训练集-vs-测试集" class="nav-link" data-scroll-target="#训练集-vs-测试集"><span class="header-section-number">3.11</span> 2.10 训练集 vs 测试集</a>
+  <ul class="collapse">
+  <li><a href="#为什么要分开" id="toc-为什么要分开" class="nav-link" data-scroll-target="#为什么要分开"><span class="header-section-number">3.11.1</span> 🎯 为什么要分开？</a></li>
+  <li><a href="#数据分割" id="toc-数据分割" class="nav-link" data-scroll-target="#数据分割"><span class="header-section-number">3.11.2</span> 📂 数据分割</a></li>
+  <li><a href="#实现-1" id="toc-实现-1" class="nav-link" data-scroll-target="#实现-1"><span class="header-section-number">3.11.3</span> 💻 实现</a></li>
+  <li><a href="#常见情况分析" id="toc-常见情况分析" class="nav-link" data-scroll-target="#常见情况分析"><span class="header-section-number">3.11.4</span> 🚨 常见情况分析</a></li>
+  </ul></li>
+  <li><a href="#正则化-regularization" id="toc-正则化-regularization" class="nav-link" data-scroll-target="#正则化-regularization"><span class="header-section-number">3.12</span> 2.11 正则化 (Regularization)</a>
+  <ul class="collapse">
+  <li><a href="#什么是正则化" id="toc-什么是正则化" class="nav-link" data-scroll-target="#什么是正则化"><span class="header-section-number">3.12.1</span> 🎯 什么是正则化？</a></li>
+  <li><a href="#l2-regularization-ridge" id="toc-l2-regularization-ridge" class="nav-link" data-scroll-target="#l2-regularization-ridge"><span class="header-section-number">3.12.2</span> 📐 L2 Regularization (Ridge)</a></li>
+  <li><a href="#l1-regularization-lasso" id="toc-l1-regularization-lasso" class="nav-link" data-scroll-target="#l1-regularization-lasso"><span class="header-section-number">3.12.3</span> 📐 L1 Regularization (Lasso)</a></li>
+  <li><a href="#使用-scikit-learn" id="toc-使用-scikit-learn" class="nav-link" data-scroll-target="#使用-scikit-learn"><span class="header-section-number">3.12.4</span> 💻 使用 Scikit-learn</a></li>
+  </ul></li>
+  <li><a href="#特征工程-feature-engineering" id="toc-特征工程-feature-engineering" class="nav-link" data-scroll-target="#特征工程-feature-engineering"><span class="header-section-number">3.13</span> 2.12 特征工程 (Feature Engineering)</a>
+  <ul class="collapse">
+  <li><a href="#什么是特征工程" id="toc-什么是特征工程" class="nav-link" data-scroll-target="#什么是特征工程"><span class="header-section-number">3.13.1</span> 🛠️ 什么是特征工程？</a></li>
+  <li><a href="#常见技巧" id="toc-常见技巧" class="nav-link" data-scroll-target="#常见技巧"><span class="header-section-number">3.13.2</span> 🔹 常见技巧</a></li>
+  </ul></li>
+  <li><a href="#实战pm2.5-预测" id="toc-实战pm2.5-预测" class="nav-link" data-scroll-target="#实战pm2.5-预测"><span class="header-section-number">3.14</span> 2.13 实战：PM2.5 预测</a>
+  <ul class="collapse">
+  <li><a href="#问题描述" id="toc-问题描述" class="nav-link" data-scroll-target="#问题描述"><span class="header-section-number">3.14.1</span> 📋 问题描述</a></li>
+  <li><a href="#数据格式" id="toc-数据格式" class="nav-link" data-scroll-target="#数据格式"><span class="header-section-number">3.14.2</span> 📂 数据格式</a></li>
+  <li><a href="#完整代码" id="toc-完整代码" class="nav-link" data-scroll-target="#完整代码"><span class="header-section-number">3.14.3</span> 💻 完整代码</a></li>
+  </ul></li>
+  <li><a href="#回归的局限性" id="toc-回归的局限性" class="nav-link" data-scroll-target="#回归的局限性"><span class="header-section-number">3.15</span> 2.14 回归的局限性</a>
+  <ul class="collapse">
+  <li><a href="#什么时候回归不适用" id="toc-什么时候回归不适用" class="nav-link" data-scroll-target="#什么时候回归不适用"><span class="header-section-number">3.15.1</span> ⚠️ 什么时候回归不适用？</a></li>
+  <li><a href="#解决方案" id="toc-解决方案" class="nav-link" data-scroll-target="#解决方案"><span class="header-section-number">3.15.2</span> 💡 解决方案</a></li>
+  </ul></li>
+  <li><a href="#本章作业" id="toc-本章作业" class="nav-link" data-scroll-target="#本章作业"><span class="header-section-number">3.16</span> 📝 本章作业</a>
+  <ul class="collapse">
+  <li><a href="#作业-1理论题" id="toc-作业-1理论题" class="nav-link" data-scroll-target="#作业-1理论题"><span class="header-section-number">3.16.1</span> 作业 1：理论题</a></li>
+  <li><a href="#作业-2编程实践" id="toc-作业-2编程实践" class="nav-link" data-scroll-target="#作业-2编程实践"><span class="header-section-number">3.16.2</span> 作业 2：编程实践</a></li>
+  <li><a href="#作业-3kaggle-实战" id="toc-作业-3kaggle-实战" class="nav-link" data-scroll-target="#作业-3kaggle-实战"><span class="header-section-number">3.16.3</span> 作业 3：Kaggle 实战</a></li>
+  </ul></li>
+  <li><a href="#本章关键概念总结" id="toc-本章关键概念总结" class="nav-link" data-scroll-target="#本章关键概念总结"><span class="header-section-number">3.17</span> 🔑 本章关键概念总结</a></li>
+  <li><a href="#下一章预告" id="toc-下一章预告" class="nav-link" data-scroll-target="#下一章预告"><span class="header-section-number">3.18</span> 🎯 下一章预告</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">第一部分：基础篇</a></li><li class="breadcrumb-item"><a href="./Chapter2.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">第二章：回归 (Regression)</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">第二章：回归 (Regression)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="章节目标" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="章节目标"><span class="header-section-number">3.1</span> 📌 章节目标</h2>
+<ul>
+<li>掌握线性回归的原理和实现</li>
+<li>深入理解梯度下降算法</li>
+<li>学会评估回归模型的性能</li>
+<li>处理实际数据集的技巧</li>
+<li>了解回归的变种和改进方法</li>
+</ul>
+<hr>
+</section>
+<section id="什么是回归" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="什么是回归"><span class="header-section-number">3.2</span> 2.1 什么是回归？</h2>
+<section id="定义" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="定义"><span class="header-section-number">3.2.1</span> 🎯 定义</h3>
+<blockquote class="blockquote">
+<p><strong>Regression（回归）</strong>：预测一个<strong>连续的数值</strong></p>
+</blockquote>
+<p><strong>例子</strong>： - ✅ 预测房价：$350,000 - ✅ 预测温度：25.3°C - ✅ 预测股票价格：$152.50 - ❌ 预测类别：猫/狗（这是分类问题）</p>
+</section>
+<section id="回归-vs-分类" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="回归-vs-分类"><span class="header-section-number">3.2.2</span> 📊 回归 vs 分类</h3>
+<pre><code>回归 (Regression):
+  输出 = 连续数值
+  例：0, 0.5, 1.23, 100, -5.7, ...
+
+分类 (Classification):
+  输出 = 离散类别
+  例：猫, 狗, 猪 / 是, 否 / Class 1, 2, 3</code></pre>
+<hr>
+</section>
+</section>
+<section id="案例宝可梦-cp-值预测" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="案例宝可梦-cp-值预测"><span class="header-section-number">3.3</span> 2.2 案例：宝可梦 CP 值预测</h2>
+<section id="问题设定" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="问题设定"><span class="header-section-number">3.3.1</span> 🎮 问题设定</h3>
+<p><strong>背景</strong>：Pokemon GO 游戏中，宝可梦进化后的 CP 值（战斗力）是多少？</p>
+<p><strong>数据</strong>： | 进化前 CP (x) | 进化后 CP (y) | |————–|————–| | 10 | 28 | | 20 | 55 | | 30 | 82 | | 40 | 109 | | 50 | 136 | | … | … |</p>
+<p><strong>目标</strong>：给定进化前的 CP 值，预测进化后的 CP 值</p>
+<hr>
+</section>
+</section>
+<section id="step-1-定义模型-model" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="step-1-定义模型-model"><span class="header-section-number">3.4</span> 2.3 Step 1: 定义模型 (Model)</h2>
+<section id="linear-model线性模型" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="linear-model线性模型"><span class="header-section-number">3.4.1</span> 🔹 Linear Model（线性模型）</h3>
+<p>最简单的模型：一条直线</p>
+<pre><code>y = b + w·x</code></pre>
+<ul>
+<li><strong>x</strong>: 输入特征（进化前 CP）</li>
+<li><strong>y</strong>: 输出预测（进化后 CP）</li>
+<li><strong>w</strong>: 权重 (weight)</li>
+<li><strong>b</strong>: 偏差 (bias)</li>
+</ul>
+</section>
+<section id="可视化" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="可视化"><span class="header-section-number">3.4.2</span> 📈 可视化</h3>
+<pre><code>y (进化后CP)
+↑
+|         ●
+|       ●   y = b + w·x
+|     ●
+|   ●
+| ●
+|____________→ x (进化前CP)</code></pre>
+<p>不同的 w 和 b 会产生不同的直线：</p>
+<pre><code>w = 2, b = 10:  y = 10 + 2x  (陡峭)
+w = 3, b = 0:   y = 3x       (更陡)
+w = 1, b = 20:  y = 20 + x   (平缓，起点高)</code></pre>
+</section>
+<section id="更复杂的模型" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="更复杂的模型"><span class="header-section-number">3.4.3</span> 🔸 更复杂的模型</h3>
+<p>有时候数据不是直线，可以用多项式：</p>
+<pre><code>y = b + w₁·x + w₂·x²
+y = b + w₁·x + w₂·x² + w₃·x³</code></pre>
+<p><strong>思考</strong>：模型越复杂越好吗？</p>
+<hr>
+</section>
+</section>
+<section id="step-2-损失函数-loss-function" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="step-2-损失函数-loss-function"><span class="header-section-number">3.5</span> 2.4 Step 2: 损失函数 (Loss Function)</h2>
+<section id="如何评估一个-function-的好坏" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="如何评估一个-function-的好坏"><span class="header-section-number">3.5.1</span> 🎯 如何评估一个 function 的好坏？</h3>
+<p><strong>答案</strong>：看预测值和真实值的差距！</p>
+</section>
+<section id="mean-squared-error-mse" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="mean-squared-error-mse"><span class="header-section-number">3.5.2</span> 📐 Mean Squared Error (MSE)</h3>
+<p>最常用的损失函数：</p>
+<pre><code>L(w, b) = (1/N) Σ(ŷⁿ - yⁿ)²
+
+其中：
+- N: 训练数据数量
+- yⁿ: 第 n 笔数据的真实值
+- ŷⁿ = b + w·xⁿ: 第 n 笔数据的预测值</code></pre>
+</section>
+<section id="例子计算" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="例子计算"><span class="header-section-number">3.5.3</span> 📊 例子计算</h3>
+<p>假设 w=2, b=10，有 3 笔数据：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>x</th>
+<th>y (真实)</th>
+<th>ŷ = 10+2x (预测)</th>
+<th>误差 (ŷ-y)</th>
+<th>平方误差</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10</td>
+<td>28</td>
+<td>30</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>55</td>
+<td>50</td>
+<td>-5</td>
+<td>25</td>
+</tr>
+<tr class="odd">
+<td>30</td>
+<td>82</td>
+<td>70</td>
+<td>-12</td>
+<td>144</td>
+</tr>
+</tbody>
+</table>
+<pre><code>Loss = (4 + 25 + 144) / 3 = 57.67</code></pre>
+</section>
+<section id="loss-function-是一个地形图" class="level3" data-number="3.5.4">
+<h3 data-number="3.5.4" class="anchored" data-anchor-id="loss-function-是一个地形图"><span class="header-section-number">3.5.4</span> 🗺️ Loss Function 是一个地形图</h3>
+<p>把 Loss 看成 w 和 b 的函数：<code>L(w, b)</code></p>
+<pre><code>Loss
+ ↑
+ |      山峰
+ |    /    \
+ |   /  ●   \    ● 某组参数的 Loss
+ |  /        \
+ | /    ★     \  ★ 最佳参数（Loss 最小）
+ |/_____谷底___\
+   w, b 的组合</code></pre>
+<p><strong>目标</strong>：找到让 Loss 最小的 w 和 b</p>
+<hr>
+</section>
+</section>
+<section id="step-3-梯度下降-gradient-descent" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="step-3-梯度下降-gradient-descent"><span class="header-section-number">3.6</span> 2.5 Step 3: 梯度下降 (Gradient Descent)</h2>
+<section id="直观理解盲人下山" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="直观理解盲人下山"><span class="header-section-number">3.6.1</span> 🏔️ 直观理解：盲人下山</h3>
+<p>想象你是盲人，站在山上，想找到最低点：</p>
+<ol type="1">
+<li><strong>站在某个位置</strong>（初始参数 w⁰, b⁰）</li>
+<li><strong>感受周围的坡度</strong>（计算梯度 ∂L/∂w, ∂L/∂b）</li>
+<li><strong>往下坡方向走一小步</strong>（更新参数）</li>
+<li><strong>重复 2-3 步</strong>，直到到达谷底</li>
+</ol>
+</section>
+<section id="数学公式" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="数学公式"><span class="header-section-number">3.6.2</span> 📐 数学公式</h3>
+<pre><code>重复以下步骤，直到收敛：
+
+w ← w - η · ∂L/∂w
+b ← b - η · ∂L/∂b</code></pre>
+<p><strong>符号说明</strong>： - <code>η</code> (eta): <strong>Learning Rate</strong>（学习率） - 控制每次更新的步长 - 太大：可能跳过最低点，甚至发散 - 太小：收敛太慢 - 典型值：0.001, 0.01, 0.1</p>
+<ul>
+<li><code>∂L/∂w</code>: Loss 对 w 的<strong>偏导数</strong>（梯度）
+<ul>
+<li>表示 w 增加一点，Loss 会增加/减少多少</li>
+<li>正值：w 增加 → Loss 增加 → 应该减小 w</li>
+<li>负值：w 增加 → Loss 减少 → 应该增加 w</li>
+</ul></li>
+</ul>
+</section>
+<section id="推导梯度公式" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="推导梯度公式"><span class="header-section-number">3.6.3</span> 🧮 推导梯度公式</h3>
+<p>对于线性模型 <code>y = b + w·x</code>，Loss 为：</p>
+<pre><code>L(w, b) = (1/N) Σ(b + w·xⁿ - yⁿ)²</code></pre>
+<p>计算偏导数：</p>
+<pre><code>∂L/∂w = (2/N) Σ(b + w·xⁿ - yⁿ)·xⁿ
+∂L/∂b = (2/N) Σ(b + w·xⁿ - yⁿ)</code></pre>
+</section>
+<section id="python-实现" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="python-实现"><span class="header-section-number">3.6.4</span> 💻 Python 实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 训练数据</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>])</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="dv">28</span>, <span class="dv">55</span>, <span class="dv">82</span>, <span class="dv">109</span>, <span class="dv">136</span>])</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始化参数</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.0001</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 梯度下降</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 前向传播：计算预测值</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> b <span class="op">+</span> w <span class="op">*</span> X</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 计算 Loss</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> np.mean((y_pred <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 计算梯度</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    grad_w <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.mean((y_pred <span class="op">-</span> y) <span class="op">*</span> X)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    grad_b <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.mean(y_pred <span class="op">-</span> y)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 更新参数</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    w <span class="op">=</span> w <span class="op">-</span> learning_rate <span class="op">*</span> grad_w</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> b <span class="op">-</span> learning_rate <span class="op">*</span> grad_b</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 每 100 个 epoch 打印一次</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> epoch <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">: Loss=</span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">, w=</span><span class="sc">{</span>w<span class="sc">:.2f}</span><span class="ss">, b=</span><span class="sc">{</span>b<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">最终参数: w=</span><span class="sc">{</span>w<span class="sc">:.2f}</span><span class="ss">, b=</span><span class="sc">{</span>b<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"预测 x=25: y=</span><span class="sc">{</span>b <span class="op">+</span> w<span class="op">*</span><span class="dv">25</span><span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>输出示例</strong>：</p>
+<pre><code>Epoch 0: Loss=7289.00, w=3.51, b=1.47
+Epoch 100: Loss=138.24, w=2.54, b=6.89
+Epoch 200: Loss=11.17, w=2.63, b=4.12
+...
+Epoch 900: Loss=0.24, w=2.70, b=1.20
+
+最终参数: w=2.70, b=1.00
+预测 x=25: y=68.50</code></pre>
+<hr>
+</section>
+</section>
+<section id="可视化梯度下降过程" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="可视化梯度下降过程"><span class="header-section-number">3.7</span> 2.6 可视化梯度下降过程</h2>
+<section id="loss-随训练变化" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="loss-随训练变化"><span class="header-section-number">3.7.1</span> 📉 Loss 随训练变化</h3>
+<pre><code>Loss
+ ↑
+ |  ●
+ |   ●
+ |     ●
+ |       ●
+ |         ●____
+ |              ●●●●
+ |__________________→ Epoch</code></pre>
+<p><strong>观察</strong>： - 开始时 Loss 快速下降 - 后期下降变慢 - 最终趋于平稳（收敛）</p>
+</section>
+<section id="参数在参数空间中的移动" class="level3" data-number="3.7.2">
+<h3 data-number="3.7.2" class="anchored" data-anchor-id="参数在参数空间中的移动"><span class="header-section-number">3.7.2</span> 🎯 参数在参数空间中的移动</h3>
+<pre><code>b
+↑
+|     起点●
+|        ↘
+|         ↘
+|          ↘
+|           ↘
+|            ●终点
+|_____________→ w</code></pre>
+<p>每一步都朝着 Loss 减小的方向移动</p>
+<hr>
+</section>
+</section>
+<section id="learning-rate-的影响" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="learning-rate-的影响"><span class="header-section-number">3.8</span> 2.7 Learning Rate 的影响</h2>
+<section id="不同学习率的表现" class="level3" data-number="3.8.1">
+<h3 data-number="3.8.1" class="anchored" data-anchor-id="不同学习率的表现"><span class="header-section-number">3.8.1</span> ⚙️ 不同学习率的表现</h3>
+<section id="learning-rate-太小η-0.00001" class="level4" data-number="3.8.1.1">
+<h4 data-number="3.8.1.1" class="anchored" data-anchor-id="learning-rate-太小η-0.00001"><span class="header-section-number">3.8.1.1</span> <strong>Learning Rate 太小（η = 0.00001）</strong></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.00001</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">10000</span>  <span class="co"># 需要更多轮次</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>现象</strong>： - ✗ 收敛非常慢 - ✗ 可能需要训练很久 - ✓ 但比较稳定</p>
+<pre><code>Loss
+ ↑
+ |  ●
+ |   ●
+ |    ●
+ |     ●    下降太慢！
+ |      ●
+ |       ●
+ |________●________→ Epoch</code></pre>
+</section>
+<section id="learning-rate-适中η-0.0001" class="level4" data-number="3.8.1.2">
+<h4 data-number="3.8.1.2" class="anchored" data-anchor-id="learning-rate-适中η-0.0001"><span class="header-section-number">3.8.1.2</span> <strong>Learning Rate 适中（η = 0.0001）</strong></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.0001</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">1000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>现象</strong>： - ✓ 收敛速度合适 - ✓ 稳定下降 - ✓ 效果最好</p>
+<pre><code>Loss
+ ↑
+ |  ●
+ |    ●
+ |      ●
+ |        ●___     恰到好处
+ |            ●●
+ |______________→ Epoch</code></pre>
+</section>
+<section id="learning-rate-太大η-0.01" class="level4" data-number="3.8.1.3">
+<h4 data-number="3.8.1.3" class="anchored" data-anchor-id="learning-rate-太大η-0.01"><span class="header-section-number">3.8.1.3</span> <strong>Learning Rate 太大（η = 0.01）</strong></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.01</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">1000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>现象</strong>： - ✗ 参数震荡 - ✗ 可能跳过最优点 - ✗ 甚至发散（Loss 越来越大）</p>
+<pre><code>Loss
+ ↑
+ |    ●
+ |  ●   ●
+ | ●     ●    震荡！
+ |●       ●
+ |_________→ Epoch
+
+或者：
+
+Loss
+ ↑          ●
+ |        ●
+ |      ●      发散！
+ |    ●
+ |  ●
+ |_________→ Epoch</code></pre>
+</section>
+</section>
+<section id="如何选择-learning-rate" class="level3" data-number="3.8.2">
+<h3 data-number="3.8.2" class="anchored" data-anchor-id="如何选择-learning-rate"><span class="header-section-number">3.8.2</span> 💡 如何选择 Learning Rate？</h3>
+<p><strong>方法 1：试验法</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 尝试不同的学习率</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lr <span class="kw">in</span> [<span class="fl">0.1</span>, <span class="fl">0.01</span>, <span class="fl">0.001</span>, <span class="fl">0.0001</span>, <span class="fl">0.00001</span>]:</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 训练模型，观察 Loss 曲线</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>方法 2：Learning Rate Schedule</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 开始用大的学习率，逐渐减小</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>initial_lr <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    lr <span class="op">=</span> initial_lr <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> epoch <span class="op">*</span> <span class="fl">0.001</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 使用当前的 lr 更新参数</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>方法 3：Adaptive Learning Rate</strong>（后续章节会讲） - Adam - RMSprop - AdaGrad</p>
+<hr>
+</section>
+</section>
+<section id="多个特征的线性回归" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="多个特征的线性回归"><span class="header-section-number">3.9</span> 2.8 多个特征的线性回归</h2>
+<section id="从一个特征到多个特征" class="level3" data-number="3.9.1">
+<h3 data-number="3.9.1" class="anchored" data-anchor-id="从一个特征到多个特征"><span class="header-section-number">3.9.1</span> 🔢 从一个特征到多个特征</h3>
+<p><strong>之前</strong>：只用进化前的 CP 值</p>
+<pre><code>y = b + w·x</code></pre>
+<p><strong>现在</strong>：考虑多个因素 - x₁: 进化前 CP 值 - x₂: 物种（编号） - x₃: 血量 (HP) - x₄: 重量 - …</p>
+<pre><code>y = b + w₁·x₁ + w₂·x₂ + w₃·x₃ + w₄·x₄</code></pre>
+</section>
+<section id="向量化表示" class="level3" data-number="3.9.2">
+<h3 data-number="3.9.2" class="anchored" data-anchor-id="向量化表示"><span class="header-section-number">3.9.2</span> 📐 向量化表示</h3>
+<pre><code>y = b + w₁·x₁ + w₂·x₂ + ... + wₙ·xₙ
+
+写成向量形式：
+y = b + wᵀx
+
+其中：
+w = [w₁, w₂, ..., wₙ]ᵀ  (权重向量)
+x = [x₁, x₂, ..., xₙ]ᵀ  (特征向量)</code></pre>
+</section>
+<section id="实现" class="level3" data-number="3.9.3">
+<h3 data-number="3.9.3" class="anchored" data-anchor-id="实现"><span class="header-section-number">3.9.3</span> 💻 实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 数据（每行一个样本，每列一个特征）</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">10</span>, <span class="dv">1</span>, <span class="dv">50</span>, <span class="fl">5.0</span>],  <span class="co"># CP=10, 种类=1, HP=50, 重量=5.0</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">20</span>, <span class="dv">1</span>, <span class="dv">60</span>, <span class="fl">5.5</span>],</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">30</span>, <span class="dv">2</span>, <span class="dv">70</span>, <span class="fl">6.0</span>],</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">40</span>, <span class="dv">2</span>, <span class="dv">80</span>, <span class="fl">6.5</span>],</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">50</span>, <span class="dv">3</span>, <span class="dv">90</span>, <span class="fl">7.0</span>],</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="dv">28</span>, <span class="dv">55</span>, <span class="dv">82</span>, <span class="dv">109</span>, <span class="dv">136</span>])</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始化参数</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>n_features <span class="op">=</span> X.shape[<span class="dv">1</span>]  <span class="co"># 特征数量</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.zeros(n_features)  <span class="co"># [0, 0, 0, 0]</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.00001</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 梯度下降</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 预测：y_pred = b + X @ w</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> b <span class="op">+</span> np.dot(X, w)</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loss</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> np.mean((y_pred <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 梯度</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    grad_w <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.dot(X.T, (y_pred <span class="op">-</span> y)) <span class="op">/</span> <span class="bu">len</span>(y)</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>    grad_b <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.mean(y_pred <span class="op">-</span> y)</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 更新</span></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>    w <span class="op">=</span> w <span class="op">-</span> learning_rate <span class="op">*</span> grad_w</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> b <span class="op">-</span> learning_rate <span class="op">*</span> grad_b</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> epoch <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">: Loss=</span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">权重: </span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"偏差: </span><span class="sc">{</span>b<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="评估回归模型" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="评估回归模型"><span class="header-section-number">3.10</span> 2.9 评估回归模型</h2>
+<section id="评估指标" class="level3" data-number="3.10.1">
+<h3 data-number="3.10.1" class="anchored" data-anchor-id="评估指标"><span class="header-section-number">3.10.1</span> 📊 评估指标</h3>
+<section id="mean-squared-error-mse-1" class="level4" data-number="3.10.1.1">
+<h4 data-number="3.10.1.1" class="anchored" data-anchor-id="mean-squared-error-mse-1"><span class="header-section-number">3.10.1.1</span> <strong>1. Mean Squared Error (MSE)</strong></h4>
+<pre><code>MSE = (1/N) Σ(ŷⁿ - yⁿ)²</code></pre>
+<ul>
+<li>平均平方误差</li>
+<li>单位是原始单位的平方</li>
+<li>对异常值敏感（因为平方）</li>
+</ul>
+</section>
+<section id="root-mean-squared-error-rmse" class="level4" data-number="3.10.1.2">
+<h4 data-number="3.10.1.2" class="anchored" data-anchor-id="root-mean-squared-error-rmse"><span class="header-section-number">3.10.1.2</span> <strong>2. Root Mean Squared Error (RMSE)</strong></h4>
+<pre><code>RMSE = √MSE = √[(1/N) Σ(ŷⁿ - yⁿ)²]</code></pre>
+<ul>
+<li>对 MSE 开根号</li>
+<li>单位和原始数据相同</li>
+<li>更直观</li>
+</ul>
+</section>
+<section id="mean-absolute-error-mae" class="level4" data-number="3.10.1.3">
+<h4 data-number="3.10.1.3" class="anchored" data-anchor-id="mean-absolute-error-mae"><span class="header-section-number">3.10.1.3</span> <strong>3. Mean Absolute Error (MAE)</strong></h4>
+<pre><code>MAE = (1/N) Σ|ŷⁿ - yⁿ|</code></pre>
+<ul>
+<li>平均绝对误差</li>
+<li>对异常值不敏感</li>
+<li>也很直观</li>
+</ul>
+</section>
+<section id="r²-score-决定系数" class="level4" data-number="3.10.1.4">
+<h4 data-number="3.10.1.4" class="anchored" data-anchor-id="r²-score-决定系数"><span class="header-section-number">3.10.1.4</span> <strong>4. R² Score (决定系数)</strong></h4>
+<pre><code>R² = 1 - (SS_res / SS_tot)
+
+SS_res = Σ(yⁿ - ŷⁿ)²  (残差平方和)
+SS_tot = Σ(yⁿ - ȳ)²   (总平方和，ȳ是平均值)</code></pre>
+<ul>
+<li>范围：-∞ 到 1</li>
+<li>R² = 1: 完美预测</li>
+<li>R² = 0: 和预测平均值一样好</li>
+<li>R² &lt; 0: 比预测平均值还差</li>
+</ul>
+</section>
+</section>
+<section id="计算评估指标" class="level3" data-number="3.10.2">
+<h3 data-number="3.10.2" class="anchored" data-anchor-id="计算评估指标"><span class="header-section-number">3.10.2</span> 💻 计算评估指标</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, mean_absolute_error, r2_score</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 真实值和预测值</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>y_true <span class="op">=</span> np.array([<span class="dv">28</span>, <span class="dv">55</span>, <span class="dv">82</span>, <span class="dv">109</span>, <span class="dv">136</span>])</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> np.array([<span class="dv">30</span>, <span class="dv">52</span>, <span class="dv">80</span>, <span class="dv">110</span>, <span class="dv">135</span>])</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算指标</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>mse <span class="op">=</span> mean_squared_error(y_true, y_pred)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mse)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>mae <span class="op">=</span> mean_absolute_error(y_true, y_pred)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> r2_score(y_true, y_pred)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MSE:  </span><span class="sc">{</span>mse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"RMSE: </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MAE:  </span><span class="sc">{</span>mae<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R²:   </span><span class="sc">{</span>r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>输出</strong>：</p>
+<pre><code>MSE:  5.40
+RMSE: 2.32
+MAE:  1.80
+R²:   0.9996</code></pre>
+<hr>
+</section>
+</section>
+<section id="训练集-vs-测试集" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="训练集-vs-测试集"><span class="header-section-number">3.11</span> 2.10 训练集 vs 测试集</h2>
+<section id="为什么要分开" class="level3" data-number="3.11.1">
+<h3 data-number="3.11.1" class="anchored" data-anchor-id="为什么要分开"><span class="header-section-number">3.11.1</span> 🎯 为什么要分开？</h3>
+<p><strong>问题</strong>：如果只在训练数据上评估，可能产生<strong>过拟合</strong>！</p>
+<pre><code>学生A：考试前看过所有题目和答案
+      → 考试100分
+      → 但真的理解了吗？
+
+学生B：认真学习概念和方法
+      → 考试95分
+      → 但能解决新问题</code></pre>
+</section>
+<section id="数据分割" class="level3" data-number="3.11.2">
+<h3 data-number="3.11.2" class="anchored" data-anchor-id="数据分割"><span class="header-section-number">3.11.2</span> 📂 数据分割</h3>
+<pre><code>原始数据 (100%)
+    ↓
+    ├─ 训练集 (Training Set) - 80%
+    │    用来训练模型（学习参数）
+    │
+    └─ 测试集 (Test Set) - 20%
+         用来评估模型（模拟真实场景）</code></pre>
+<p><strong>重要</strong>：测试集在训练时<strong>完全不能看</strong>！</p>
+</section>
+<section id="实现-1" class="level3" data-number="3.11.3">
+<h3 data-number="3.11.3" class="anchored" data-anchor-id="实现-1"><span class="header-section-number">3.11.3</span> 💻 实现</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 分割数据</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    X, y,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    test_size<span class="op">=</span><span class="fl">0.2</span>,      <span class="co"># 20% 作为测试集</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span>     <span class="co"># 固定随机种子，保证可重复</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"训练集大小: </span><span class="sc">{</span><span class="bu">len</span>(X_train)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"测试集大小: </span><span class="sc">{</span><span class="bu">len</span>(X_test)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 只在训练集上训练</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 在两个集合上分别评估</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>train_score <span class="op">=</span> model.score(X_train, y_train)</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>test_score <span class="op">=</span> model.score(X_test, y_test)</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"训练集 R²: </span><span class="sc">{</span>train_score<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"测试集 R²: </span><span class="sc">{</span>test_score<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="常见情况分析" class="level3" data-number="3.11.4">
+<h3 data-number="3.11.4" class="anchored" data-anchor-id="常见情况分析"><span class="header-section-number">3.11.4</span> 🚨 常见情况分析</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>训练集表现</th>
+<th>测试集表现</th>
+<th>诊断</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>好</td>
+<td>好</td>
+<td>✓ 正常</td>
+<td>继续优化</td>
+</tr>
+<tr class="even">
+<td>差</td>
+<td>差</td>
+<td>Underfitting</td>
+<td>更复杂模型</td>
+</tr>
+<tr class="odd">
+<td>好</td>
+<td>差</td>
+<td>Overfitting</td>
+<td>正则化/更多数据</td>
+</tr>
+<tr class="even">
+<td>差</td>
+<td>好</td>
+<td>罕见，数据问题</td>
+<td>检查数据分割</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="正则化-regularization" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="正则化-regularization"><span class="header-section-number">3.12</span> 2.11 正则化 (Regularization)</h2>
+<section id="什么是正则化" class="level3" data-number="3.12.1">
+<h3 data-number="3.12.1" class="anchored" data-anchor-id="什么是正则化"><span class="header-section-number">3.12.1</span> 🎯 什么是正则化？</h3>
+<p><strong>问题</strong>：模型太复杂，过拟合训练数据</p>
+<pre><code>y = b + w₁x + w₂x² + w₃x³ + ... + w₁₀₀x¹⁰⁰</code></pre>
+<p>这个模型有 100 个参数，可以完美拟合训练数据，但在新数据上表现很差！</p>
+<p><strong>解决</strong>：惩罚过大的参数，让模型更”平滑”</p>
+</section>
+<section id="l2-regularization-ridge" class="level3" data-number="3.12.2">
+<h3 data-number="3.12.2" class="anchored" data-anchor-id="l2-regularization-ridge"><span class="header-section-number">3.12.2</span> 📐 L2 Regularization (Ridge)</h3>
+<p>修改 Loss Function：</p>
+<pre><code>L(w, b) = (1/N) Σ(ŷⁿ - yⁿ)² + λ·Σwᵢ²
+          \_____________/   \______/
+           原始 Loss      正则化项</code></pre>
+<ul>
+<li><code>λ</code> (lambda): 正则化强度
+<ul>
+<li>λ = 0: 没有正则化</li>
+<li>λ 很大: 强烈惩罚大参数</li>
+<li>典型值: 0.01, 0.1, 1, 10</li>
+</ul></li>
+</ul>
+<p><strong>效果</strong>：参数倾向于变小，模型更简单</p>
+</section>
+<section id="l1-regularization-lasso" class="level3" data-number="3.12.3">
+<h3 data-number="3.12.3" class="anchored" data-anchor-id="l1-regularization-lasso"><span class="header-section-number">3.12.3</span> 📐 L1 Regularization (Lasso)</h3>
+<pre><code>L(w, b) = (1/N) Σ(ŷⁿ - yⁿ)² + λ·Σ|wᵢ|</code></pre>
+<p><strong>效果</strong>：一些参数会变成 0（特征选择）</p>
+</section>
+<section id="使用-scikit-learn" class="level3" data-number="3.12.4">
+<h3 data-number="3.12.4" class="anchored" data-anchor-id="使用-scikit-learn"><span class="header-section-number">3.12.4</span> 💻 使用 Scikit-learn</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge, Lasso</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge Regression (L2)</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>ridge_model <span class="op">=</span> Ridge(alpha<span class="op">=</span><span class="fl">1.0</span>)  <span class="co"># alpha 就是 λ</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>ridge_model.fit(X_train, y_train)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Lasso Regression (L1)</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>lasso_model <span class="op">=</span> Lasso(alpha<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>lasso_model.fit(X_train, y_train)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较参数</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Ridge 权重:"</span>, ridge_model.coef_)</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Lasso 权重:"</span>, lasso_model.coef_)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Lasso 的一些权重可能是 0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="特征工程-feature-engineering" class="level2" data-number="3.13">
+<h2 data-number="3.13" class="anchored" data-anchor-id="特征工程-feature-engineering"><span class="header-section-number">3.13</span> 2.12 特征工程 (Feature Engineering)</h2>
+<section id="什么是特征工程" class="level3" data-number="3.13.1">
+<h3 data-number="3.13.1" class="anchored" data-anchor-id="什么是特征工程"><span class="header-section-number">3.13.1</span> 🛠️ 什么是特征工程？</h3>
+<blockquote class="blockquote">
+<p>设计和选择好的特征，比选择算法更重要！</p>
+</blockquote>
+<p><strong>垃圾进，垃圾出 (Garbage In, Garbage Out)</strong></p>
+</section>
+<section id="常见技巧" class="level3" data-number="3.13.2">
+<h3 data-number="3.13.2" class="anchored" data-anchor-id="常见技巧"><span class="header-section-number">3.13.2</span> 🔹 常见技巧</h3>
+<section id="特征缩放-feature-scaling" class="level4" data-number="3.13.2.1">
+<h4 data-number="3.13.2.1" class="anchored" data-anchor-id="特征缩放-feature-scaling"><span class="header-section-number">3.13.2.1</span> <strong>1. 特征缩放 (Feature Scaling)</strong></h4>
+<p><strong>问题</strong>：不同特征的尺度差异很大</p>
+<pre><code>特征1：房屋面积 (50-200 m²)
+特征2：房间数量 (1-5 个)
+特征3：距离市中心 (0-50 km)
+特征4：建造年份 (1950-2023)</code></pre>
+<p><strong>方法</strong>：</p>
+<p><strong>标准化 (Standardization)</strong></p>
+<pre><code>x' = (x - μ) / σ
+
+μ: 平均值
+σ: 标准差
+结果：平均值=0，标准差=1</code></pre>
+<p><strong>归一化 (Normalization)</strong></p>
+<pre><code>x' = (x - min) / (max - min)
+
+结果：范围 [0, 1]</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, MinMaxScaler</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 标准化</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X_train)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 归一化</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>normalizer <span class="op">=</span> MinMaxScaler()</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>X_normalized <span class="op">=</span> normalizer.fit_transform(X_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="多项式特征-polynomial-features" class="level4" data-number="3.13.2.2">
+<h4 data-number="3.13.2.2" class="anchored" data-anchor-id="多项式特征-polynomial-features"><span class="header-section-number">3.13.2.2</span> <strong>2. 多项式特征 (Polynomial Features)</strong></h4>
+<p>把线性模型变成非线性：</p>
+<pre><code>原始特征: [x₁, x₂]
+↓
+多项式特征: [1, x₁, x₂, x₁², x₁x₂, x₂²]</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> PolynomialFeatures</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>poly <span class="op">=</span> PolynomialFeatures(degree<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>X_poly <span class="op">=</span> poly.fit_transform(X)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 例子</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 输入: [[2, 3]]</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出: [[1, 2, 3, 4, 6, 9]]</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="co">#        1  x₁ x₂ x₁² x₁x₂ x₂²</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="类别特征编码" class="level4" data-number="3.13.2.3">
+<h4 data-number="3.13.2.3" class="anchored" data-anchor-id="类别特征编码"><span class="header-section-number">3.13.2.3</span> <strong>3. 类别特征编码</strong></h4>
+<p><strong>问题</strong>：特征是类别，不是数字</p>
+<pre><code>城市: ['北京', '上海', '深圳']</code></pre>
+<p><strong>方法 1：Label Encoding</strong></p>
+<pre><code>北京 → 0
+上海 → 1
+深圳 → 2</code></pre>
+<p><strong>问题</strong>：暗示了顺序关系（深圳 &gt; 上海 &gt; 北京？）</p>
+<p><strong>方法 2：One-Hot Encoding</strong></p>
+<pre><code>北京 → [1, 0, 0]
+上海 → [0, 1, 0]
+深圳 → [0, 0, 1]</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder, OneHotEncoder</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># One-Hot Encoding</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'city'</span>: [<span class="st">'北京'</span>, <span class="st">'上海'</span>, <span class="st">'深圳'</span>, <span class="st">'北京'</span>]})</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>df_encoded <span class="op">=</span> pd.get_dummies(df, columns<span class="op">=</span>[<span class="st">'city'</span>])</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_encoded)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>输出</strong>：</p>
+<pre><code>   city_北京  city_上海  city_深圳
+0         1         0         0
+1         0         1         0
+2         0         0         1
+3         1         0         0</code></pre>
+</section>
+<section id="特征交叉-feature-crossing" class="level4" data-number="3.13.2.4">
+<h4 data-number="3.13.2.4" class="anchored" data-anchor-id="特征交叉-feature-crossing"><span class="header-section-number">3.13.2.4</span> <strong>4. 特征交叉 (Feature Crossing)</strong></h4>
+<p>创建特征之间的交互项：</p>
+<pre><code>特征：面积(x₁), 房间数(x₂)
+
+新特征：每个房间的平均面积 = x₁ / x₂</code></pre>
+</section>
+<section id="处理缺失值" class="level4" data-number="3.13.2.5">
+<h4 data-number="3.13.2.5" class="anchored" data-anchor-id="处理缺失值"><span class="header-section-number">3.13.2.5</span> <strong>5. 处理缺失值</strong></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 用平均值填充</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>imputer <span class="op">=</span> SimpleImputer(strategy<span class="op">=</span><span class="st">'mean'</span>)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>X_filled <span class="op">=</span> imputer.fit_transform(X)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 其他策略: 'median', 'most_frequent', 'constant'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+</section>
+<section id="实战pm2.5-预测" class="level2" data-number="3.14">
+<h2 data-number="3.14" class="anchored" data-anchor-id="实战pm2.5-预测"><span class="header-section-number">3.14</span> 2.13 实战：PM2.5 预测</h2>
+<section id="问题描述" class="level3" data-number="3.14.1">
+<h3 data-number="3.14.1" class="anchored" data-anchor-id="问题描述"><span class="header-section-number">3.14.1</span> 📋 问题描述</h3>
+<p><strong>数据</strong>：丰原气象站的观测数据 - 18 个特征：PM2.5, PM10, 温度, 湿度, 风速… - 每小时记录一次 - <strong>目标</strong>：根据前 9 小时的数据，预测第 10 小时的 PM2.5</p>
+</section>
+<section id="数据格式" class="level3" data-number="3.14.2">
+<h3 data-number="3.14.2" class="anchored" data-anchor-id="数据格式"><span class="header-section-number">3.14.2</span> 📂 数据格式</h3>
+<pre><code>日期        AMB_TEMP  CH4    CO    ...  PM2.5
+2017-01  0     14      1.8   0.37       35
+2017-01  1     14      1.8   0.37       26
+2017-01  2     14      1.8   0.36       18
+...</code></pre>
+</section>
+<section id="完整代码" class="level3" data-number="3.14.3">
+<h3 data-number="3.14.3" class="anchored" data-anchor-id="完整代码"><span class="header-section-number">3.14.3</span> 💻 完整代码</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 读取数据</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">'train.csv'</span>, encoding<span class="op">=</span><span class="st">'big5'</span>)</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 数据预处理</span></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 选择特征</span></span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">'PM2.5'</span>, <span class="st">'PM10'</span>, <span class="st">'SO2'</span>, <span class="st">'CO'</span>, <span class="st">'O3'</span>, <span class="st">'TEMP'</span>, <span class="st">'WIND_SPEED'</span>]</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[data[<span class="st">'观测项目'</span>].isin(features)]</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 转换为数值</span></span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.iloc[:, <span class="dv">3</span>:]  <span class="co"># 去掉前3列（日期、测站、观测项目）</span></span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>data[data <span class="op">==</span> <span class="st">'NR'</span>] <span class="op">=</span> <span class="dv">0</span>    <span class="co"># NR (No Rain) 改为 0</span></span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.astype(<span class="bu">float</span>)</span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 构造训练样本</span></span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 每9小时的数据预测第10小时的 PM2.5</span></span>
+<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_dataset(data, look_back<span class="op">=</span><span class="dv">9</span>):</span>
+<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>    X, y <span class="op">=</span> [], []</span>
+<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(data) <span class="op">-</span> look_back <span class="op">-</span> <span class="dv">1</span>, <span class="dv">18</span>):  <span class="co"># 每18行是一小时的所有特征</span></span>
+<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 取9小时的数据</span></span>
+<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a>        sample <span class="op">=</span> []</span>
+<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(look_back):</span>
+<span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a>            sample.extend(data.iloc[i<span class="op">+</span>j<span class="op">*</span><span class="dv">18</span>:(i<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">18</span>, :].values.flatten())</span>
+<span id="cb55-31"><a href="#cb55-31" aria-hidden="true" tabindex="-1"></a>        X.append(sample)</span>
+<span id="cb55-32"><a href="#cb55-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-33"><a href="#cb55-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 第10小时的 PM2.5（假设 PM2.5 是第一个特征）</span></span>
+<span id="cb55-34"><a href="#cb55-34" aria-hidden="true" tabindex="-1"></a>        y.append(data.iloc[i <span class="op">+</span> look_back<span class="op">*</span><span class="dv">18</span>, <span class="dv">0</span>])</span>
+<span id="cb55-35"><a href="#cb55-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(X), np.array(y)</span>
+<span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> create_dataset(data)</span>
+<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-40"><a href="#cb55-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 分割数据集</span></span>
+<span id="cb55-41"><a href="#cb55-41" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb55-43"><a href="#cb55-43" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-44"><a href="#cb55-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 特征缩放</span></span>
+<span id="cb55-46"><a href="#cb55-46" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb55-47"><a href="#cb55-47" aria-hidden="true" tabindex="-1"></a>X_train_scaled <span class="op">=</span> scaler.fit_transform(X_train)</span>
+<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a>X_test_scaled <span class="op">=</span> scaler.transform(X_test)</span>
+<span id="cb55-49"><a href="#cb55-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-50"><a href="#cb55-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 训练模型</span></span>
+<span id="cb55-51"><a href="#cb55-51" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LinearRegression()</span>
+<span id="cb55-52"><a href="#cb55-52" aria-hidden="true" tabindex="-1"></a>model.fit(X_train_scaled, y_train)</span>
+<span id="cb55-53"><a href="#cb55-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-54"><a href="#cb55-54" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. 评估</span></span>
+<span id="cb55-55"><a href="#cb55-55" aria-hidden="true" tabindex="-1"></a>y_train_pred <span class="op">=</span> model.predict(X_train_scaled)</span>
+<span id="cb55-56"><a href="#cb55-56" aria-hidden="true" tabindex="-1"></a>y_test_pred <span class="op">=</span> model.predict(X_test_scaled)</span>
+<span id="cb55-57"><a href="#cb55-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-58"><a href="#cb55-58" aria-hidden="true" tabindex="-1"></a>train_rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_train, y_train_pred))</span>
+<span id="cb55-59"><a href="#cb55-59" aria-hidden="true" tabindex="-1"></a>test_rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_test_pred))</span>
+<span id="cb55-60"><a href="#cb55-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-61"><a href="#cb55-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"训练集 RMSE: </span><span class="sc">{</span>train_rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb55-62"><a href="#cb55-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"测试集 RMSE: </span><span class="sc">{</span>test_rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb55-63"><a href="#cb55-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-64"><a href="#cb55-64" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. 可视化</span></span>
+<span id="cb55-65"><a href="#cb55-65" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb55-66"><a href="#cb55-66" aria-hidden="true" tabindex="-1"></a>plt.scatter(y_test, y_test_pred, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb55-67"><a href="#cb55-67" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">0</span>, <span class="bu">max</span>(y_test)], [<span class="dv">0</span>, <span class="bu">max</span>(y_test)], <span class="st">'r--'</span>, lw<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb55-68"><a href="#cb55-68" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'真实 PM2.5'</span>)</span>
+<span id="cb55-69"><a href="#cb55-69" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'预测 PM2.5'</span>)</span>
+<span id="cb55-70"><a href="#cb55-70" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'PM2.5 预测结果'</span>)</span>
+<span id="cb55-71"><a href="#cb55-71" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="回归的局限性" class="level2" data-number="3.15">
+<h2 data-number="3.15" class="anchored" data-anchor-id="回归的局限性"><span class="header-section-number">3.15</span> 2.14 回归的局限性</h2>
+<section id="什么时候回归不适用" class="level3" data-number="3.15.1">
+<h3 data-number="3.15.1" class="anchored" data-anchor-id="什么时候回归不适用"><span class="header-section-number">3.15.1</span> ⚠️ 什么时候回归不适用？</h3>
+<section id="输出是类别" class="level4" data-number="3.15.1.1">
+<h4 data-number="3.15.1.1" class="anchored" data-anchor-id="输出是类别"><span class="header-section-number">3.15.1.1</span> <strong>1. 输出是类别</strong></h4>
+<pre><code>✗ 回归: 预测 "猫" = 1.7？
+✓ 分类: 预测 "猫" 的概率 = 0.9</code></pre>
+</section>
+<section id="数据非线性且复杂" class="level4" data-number="3.15.1.2">
+<h4 data-number="3.15.1.2" class="anchored" data-anchor-id="数据非线性且复杂"><span class="header-section-number">3.15.1.2</span> <strong>2. 数据非线性且复杂</strong></h4>
+<pre><code>简单非线性：可以用多项式回归
+复杂非线性：需要神经网络</code></pre>
+</section>
+<section id="有明显的异常值" class="level4" data-number="3.15.1.3">
+<h4 data-number="3.15.1.3" class="anchored" data-anchor-id="有明显的异常值"><span class="header-section-number">3.15.1.3</span> <strong>3. 有明显的异常值</strong></h4>
+<p>回归对异常值很敏感（因为平方误差）</p>
+</section>
+<section id="特征之间高度相关多重共线性" class="level4" data-number="3.15.1.4">
+<h4 data-number="3.15.1.4" class="anchored" data-anchor-id="特征之间高度相关多重共线性"><span class="header-section-number">3.15.1.4</span> <strong>4. 特征之间高度相关（多重共线性）</strong></h4>
+<pre><code>特征1：房屋面积 (m²)
+特征2：房屋面积 (ft²)
+→ 完全线性相关，模型不稳定</code></pre>
+</section>
+</section>
+<section id="解决方案" class="level3" data-number="3.15.2">
+<h3 data-number="3.15.2" class="anchored" data-anchor-id="解决方案"><span class="header-section-number">3.15.2</span> 💡 解决方案</h3>
+<ul>
+<li>分类问题 → 用 Logistic Regression</li>
+<li>复杂非线性 → 用神经网络</li>
+<li>异常值问题 → 用 Robust Regression 或去除异常值</li>
+<li>多重共线性 → 用 Ridge/Lasso 或移除相关特征</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="本章作业" class="level2" data-number="3.16">
+<h2 data-number="3.16" class="anchored" data-anchor-id="本章作业"><span class="header-section-number">3.16</span> 📝 本章作业</h2>
+<section id="作业-1理论题" class="level3" data-number="3.16.1">
+<h3 data-number="3.16.1" class="anchored" data-anchor-id="作业-1理论题"><span class="header-section-number">3.16.1</span> 作业 1：理论题</h3>
+<ol type="1">
+<li><strong>解释梯度下降</strong>
+<ul>
+<li>用自己的话解释梯度下降的原理</li>
+<li>画出 Loss 下降的曲线</li>
+<li>说明学习率的作用</li>
+</ul></li>
+<li><strong>过拟合 vs 欠拟合</strong>
+<ul>
+<li>什么是过拟合？给出例子</li>
+<li>如何检测过拟合？</li>
+<li>列出 3 种防止过拟合的方法</li>
+</ul></li>
+<li><strong>特征工程</strong>
+<ul>
+<li>为什么需要特征缩放？</li>
+<li>One-Hot Encoding 和 Label Encoding 的区别？</li>
+<li>给房价预测问题设计 3 个有用的特征</li>
+</ul></li>
+</ol>
+</section>
+<section id="作业-2编程实践" class="level3" data-number="3.16.2">
+<h3 data-number="3.16.2" class="anchored" data-anchor-id="作业-2编程实践"><span class="header-section-number">3.16.2</span> 作业 2：编程实践</h3>
+<p><strong>任务</strong>：波士顿房价预测</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_boston</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression, Ridge</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 加载数据</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>boston <span class="op">=</span> load_boston()</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> boston.data, boston.target</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 数据分割</span></span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 训练线性回归模型</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LinearRegression()</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 评估</span></span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred))</span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"RMSE: </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: 完成以下任务</span></span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a><span class="co"># a) 特征缩放，观察性能变化</span></span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a><span class="co"># b) 尝试多项式特征 (degree=2)</span></span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a><span class="co"># c) 使用 Ridge Regression，调整 alpha 参数</span></span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a><span class="co"># d) 画出真实值 vs 预测值的散点图</span></span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a><span class="co"># e) 分析哪些特征最重要（查看 model.coef_）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>提示</strong>： - 使用 <code>StandardScaler</code> 进行特征缩放 - 使用 <code>PolynomialFeatures</code> 创建多项式特征 - 尝试 alpha = [0.01, 0.1, 1, 10, 100]</p>
+</section>
+<section id="作业-3kaggle-实战" class="level3" data-number="3.16.3">
+<h3 data-number="3.16.3" class="anchored" data-anchor-id="作业-3kaggle-实战"><span class="header-section-number">3.16.3</span> 作业 3：Kaggle 实战</h3>
+<p>前往 Kaggle，参加 “House Prices - Advanced Regression Techniques” 竞赛</p>
+<p><strong>要求</strong>： 1. 下载数据集 2. 进行 EDA (Exploratory Data Analysis) 3. 特征工程 4. 训练模型 5. 提交预测结果 6. 写一份报告说明你的方法</p>
+<hr>
+</section>
+</section>
+<section id="本章关键概念总结" class="level2" data-number="3.17">
+<h2 data-number="3.17" class="anchored" data-anchor-id="本章关键概念总结"><span class="header-section-number">3.17</span> 🔑 本章关键概念总结</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>回归</td>
+<td>预测连续数值</td>
+</tr>
+<tr class="even">
+<td>线性回归</td>
+<td>y = b + w·x</td>
+</tr>
+<tr class="odd">
+<td>MSE</td>
+<td>均方误差，常用损失函数</td>
+</tr>
+<tr class="even">
+<td>梯度下降</td>
+<td>找最优参数的方法</td>
+</tr>
+<tr class="odd">
+<td>学习率</td>
+<td>控制参数更新步长</td>
+</tr>
+<tr class="even">
+<td>过拟合</td>
+<td>训练集好，测试集差</td>
+</tr>
+<tr class="odd">
+<td>欠拟合</td>
+<td>训练集和测试集都差</td>
+</tr>
+<tr class="even">
+<td>正则化</td>
+<td>惩罚过大参数，防止过拟合</td>
+</tr>
+<tr class="odd">
+<td>特征缩放</td>
+<td>统一特征尺度</td>
+</tr>
+<tr class="even">
+<td>特征工程</td>
+<td>设计好的特征</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="下一章预告" class="level2" data-number="3.18">
+<h2 data-number="3.18" class="anchored" data-anchor-id="下一章预告"><span class="header-section-number">3.18</span> 🎯 下一章预告</h2>
+<p><strong>第三章：逻辑回归与分类 (Logistic Regression &amp; Classification)</strong> - 为什么不能用线性回归做分类？ - Sigmoid 函数的作用 - Cross Entropy Loss - 多分类问题 (Softmax) - 实战：手写数字识别 (MNIST)</p>
+<hr>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter1.html" class="pagination-link" aria-label="机器学习完整课程">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">机器学习完整课程</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter3.html" class="pagination-link" aria-label="第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">第三章：分类与逻辑回归 (Classification &amp; Logistic Regression)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

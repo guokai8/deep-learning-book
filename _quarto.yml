@@ -1,0 +1,41 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "深度学习完整教程"
+  subtitle: "从零基础到大语言模型"
+  author: "Kai Guo (guokai8@gmail.com)"
+  date: "2024-11-11"
+  
+  chapters:
+    - index.md
+    - part: "第一部分：基础篇"
+      chapters:
+        - Chapter1.md
+        - Chapter2.md
+        - Chapter3.md
+        - Chapter4.md
+    
+    - part: "第二部分：进阶篇"
+      chapters:
+        - Chapter5.md
+        - Chapter6.md
+        - Chapter7.md
+        - Chapter8.md
+    
+    - part: "第三部分：实践与应用"
+      chapters:
+        - Chapter9.md
+        - Chapter10.md
+        - Chapter11.md
+        - Chapter12.md
+        - Chapter13.md
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    code-fold: false
+
