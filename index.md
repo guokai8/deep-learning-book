@@ -3,7 +3,7 @@
 ### **第一部分：机器学习基础 (ML Basics)**
 
 #### 1. **引入：机器学习是什么？**
-- 🎯 **从生活例子出发**（李宏毅式开场）
+- 🎯 **从生活例子出发**
   - "机器学习就像是教电脑'举一反三'"
   - 实例：语音识别、图像识别、AlphaGo
 - **三个步骤框架**
@@ -13,7 +13,7 @@
 
 #### 2. **回归 (Regression)**
 - Linear Regression 实例
-- 用宝可梦CP值预测演示（李宏毅经典案例）
+- 用宝可梦CP值预测演示
 - Gradient Descent 直观解释
 - 可视化：Loss Function 地形图
 
@@ -124,7 +124,6 @@
 - **编程环境**: Python + PyTorch/TensorFlow
 - **平台**: Google Colab (免费 GPU)
 - **数据集**: MNIST, CIFAR-10, ImageNet, Common Voice
-- **参考资料**: 李宏毅老师的 YouTube 课程
 
 ---
 
