@@ -778,141 +778,135 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-193"><a href="#cb19-193" aria-hidden="true" tabindex="-1"></a>            <span class="st">'color'</span>: <span class="st">'blue'</span></span>
 <span id="cb19-194"><a href="#cb19-194" aria-hidden="true" tabindex="-1"></a>        },</span>
 <span id="cb19-195"><a href="#cb19-195" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Fine-tuning (全局)'</span>: {</span>
-<span id="cb19-196"><a href="#cb19-196" aria-hidden="true" tabindex="-1"></a>            <span class="st">'model'</span>:</span>
-<span id="cb19-197"><a href="#cb19-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-198"><a href="#cb19-198" aria-hidden="true" tabindex="-1"></a><span class="op">-----</span></span>
-<span id="cb19-199"><a href="#cb19-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-200"><a href="#cb19-200" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> contonue</span>
+<span id="cb19-196"><a href="#cb19-196" aria-hidden="true" tabindex="-1"></a>            <span class="st">'model'</span>: create_model(<span class="st">'resnet50'</span>, NUM_CLASSES, feature_extract<span class="op">=</span><span class="va">False</span>),</span>
+<span id="cb19-197"><a href="#cb19-197" aria-hidden="true" tabindex="-1"></a>            <span class="st">'lr'</span>: <span class="fl">0.0001</span>,</span>
+<span id="cb19-198"><a href="#cb19-198" aria-hidden="true" tabindex="-1"></a>            <span class="st">'color'</span>: <span class="st">'red'</span></span>
+<span id="cb19-199"><a href="#cb19-199" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb19-200"><a href="#cb19-200" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb19-201"><a href="#cb19-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-202"><a href="#cb19-202" aria-hidden="true" tabindex="-1"></a>create_model(<span class="st">'resnet50'</span>, NUM_CLASSES, feature_extract<span class="op">=</span><span class="va">False</span>),</span>
-<span id="cb19-203"><a href="#cb19-203" aria-hidden="true" tabindex="-1"></a>            <span class="st">'lr'</span>: <span class="fl">0.0001</span>,</span>
-<span id="cb19-204"><a href="#cb19-204" aria-hidden="true" tabindex="-1"></a>            <span class="st">'color'</span>: <span class="st">'red'</span></span>
-<span id="cb19-205"><a href="#cb19-205" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb19-206"><a href="#cb19-206" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb19-207"><a href="#cb19-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-208"><a href="#cb19-208" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> {}</span>
-<span id="cb19-209"><a href="#cb19-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-210"><a href="#cb19-210" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> strategy_name, config <span class="kw">in</span> strategies.items():</span>
-<span id="cb19-211"><a href="#cb19-211" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="sc">{</span><span class="st">"="</span><span class="op">*</span><span class="dv">70</span><span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb19-212"><a href="#cb19-212" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'策略: </span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb19-213"><a href="#cb19-213" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="st">"="</span><span class="op">*</span><span class="dv">70</span><span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb19-214"><a href="#cb19-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> config[<span class="st">'model'</span>].to(DEVICE)</span>
-<span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 损失函数和优化器</span></span>
-<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a>        criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
-<span id="cb19-219"><a href="#cb19-219" aria-hidden="true" tabindex="-1"></a>        optimizer <span class="op">=</span> optim.Adam(</span>
-<span id="cb19-220"><a href="#cb19-220" aria-hidden="true" tabindex="-1"></a>            <span class="bu">filter</span>(<span class="kw">lambda</span> p: p.requires_grad, model.parameters()),</span>
-<span id="cb19-221"><a href="#cb19-221" aria-hidden="true" tabindex="-1"></a>            lr<span class="op">=</span>config[<span class="st">'lr'</span>]</span>
-<span id="cb19-222"><a href="#cb19-222" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb19-223"><a href="#cb19-223" aria-hidden="true" tabindex="-1"></a>        scheduler <span class="op">=</span> optim.lr_scheduler.StepLR(optimizer, step_size<span class="op">=</span><span class="dv">7</span>, gamma<span class="op">=</span><span class="fl">0.1</span>)</span>
-<span id="cb19-224"><a href="#cb19-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-225"><a href="#cb19-225" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 训练</span></span>
-<span id="cb19-226"><a href="#cb19-226" aria-hidden="true" tabindex="-1"></a>        model, history <span class="op">=</span> train_model(model, criterion, optimizer, scheduler, EPOCHS)</span>
+<span id="cb19-202"><a href="#cb19-202" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> {}</span>
+<span id="cb19-203"><a href="#cb19-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-204"><a href="#cb19-204" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> strategy_name, config <span class="kw">in</span> strategies.items():</span>
+<span id="cb19-205"><a href="#cb19-205" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="sc">{</span><span class="st">"="</span><span class="op">*</span><span class="dv">70</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb19-206"><a href="#cb19-206" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'策略: </span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb19-207"><a href="#cb19-207" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="st">"="</span><span class="op">*</span><span class="dv">70</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb19-208"><a href="#cb19-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-209"><a href="#cb19-209" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> config[<span class="st">'model'</span>].to(DEVICE)</span>
+<span id="cb19-210"><a href="#cb19-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-211"><a href="#cb19-211" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 损失函数和优化器</span></span>
+<span id="cb19-212"><a href="#cb19-212" aria-hidden="true" tabindex="-1"></a>        criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
+<span id="cb19-213"><a href="#cb19-213" aria-hidden="true" tabindex="-1"></a>        optimizer <span class="op">=</span> optim.Adam(</span>
+<span id="cb19-214"><a href="#cb19-214" aria-hidden="true" tabindex="-1"></a>            <span class="bu">filter</span>(<span class="kw">lambda</span> p: p.requires_grad, model.parameters()),</span>
+<span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a>            lr<span class="op">=</span>config[<span class="st">'lr'</span>]</span>
+<span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a>        scheduler <span class="op">=</span> optim.lr_scheduler.StepLR(optimizer, step_size<span class="op">=</span><span class="dv">7</span>, gamma<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-219"><a href="#cb19-219" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 训练</span></span>
+<span id="cb19-220"><a href="#cb19-220" aria-hidden="true" tabindex="-1"></a>        model, history <span class="op">=</span> train_model(model, criterion, optimizer, scheduler, EPOCHS)</span>
+<span id="cb19-221"><a href="#cb19-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-222"><a href="#cb19-222" aria-hidden="true" tabindex="-1"></a>        results[strategy_name] <span class="op">=</span> {</span>
+<span id="cb19-223"><a href="#cb19-223" aria-hidden="true" tabindex="-1"></a>            <span class="st">'model'</span>: model,</span>
+<span id="cb19-224"><a href="#cb19-224" aria-hidden="true" tabindex="-1"></a>            <span class="st">'history'</span>: history,</span>
+<span id="cb19-225"><a href="#cb19-225" aria-hidden="true" tabindex="-1"></a>            <span class="st">'color'</span>: config[<span class="st">'color'</span>]</span>
+<span id="cb19-226"><a href="#cb19-226" aria-hidden="true" tabindex="-1"></a>        }</span>
 <span id="cb19-227"><a href="#cb19-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-228"><a href="#cb19-228" aria-hidden="true" tabindex="-1"></a>        results[strategy_name] <span class="op">=</span> {</span>
-<span id="cb19-229"><a href="#cb19-229" aria-hidden="true" tabindex="-1"></a>            <span class="st">'model'</span>: model,</span>
-<span id="cb19-230"><a href="#cb19-230" aria-hidden="true" tabindex="-1"></a>            <span class="st">'history'</span>: history,</span>
-<span id="cb19-231"><a href="#cb19-231" aria-hidden="true" tabindex="-1"></a>            <span class="st">'color'</span>: config[<span class="st">'color'</span>]</span>
-<span id="cb19-232"><a href="#cb19-232" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb19-233"><a href="#cb19-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-234"><a href="#cb19-234" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ==================== 可视化对比 ====================</span></span>
-<span id="cb19-235"><a href="#cb19-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-236"><a href="#cb19-236" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">5</span>))</span>
-<span id="cb19-237"><a href="#cb19-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-238"><a href="#cb19-238" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loss 对比</span></span>
-<span id="cb19-239"><a href="#cb19-239" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> strategy_name, data <span class="kw">in</span> results.items():</span>
-<span id="cb19-240"><a href="#cb19-240" aria-hidden="true" tabindex="-1"></a>        epochs_range <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(data[<span class="st">'history'</span>][<span class="st">'train_loss'</span>]) <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb19-241"><a href="#cb19-241" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'train_loss'</span>],</span>
-<span id="cb19-242"><a href="#cb19-242" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Train)'</span>,</span>
-<span id="cb19-243"><a href="#cb19-243" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
-<span id="cb19-244"><a href="#cb19-244" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'val_loss'</span>],</span>
-<span id="cb19-245"><a href="#cb19-245" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Val)'</span>,</span>
-<span id="cb19-246"><a href="#cb19-246" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
+<span id="cb19-228"><a href="#cb19-228" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ==================== 可视化对比 ====================</span></span>
+<span id="cb19-229"><a href="#cb19-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-230"><a href="#cb19-230" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">5</span>))</span>
+<span id="cb19-231"><a href="#cb19-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-232"><a href="#cb19-232" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loss 对比</span></span>
+<span id="cb19-233"><a href="#cb19-233" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> strategy_name, data <span class="kw">in</span> results.items():</span>
+<span id="cb19-234"><a href="#cb19-234" aria-hidden="true" tabindex="-1"></a>        epochs_range <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(data[<span class="st">'history'</span>][<span class="st">'train_loss'</span>]) <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb19-235"><a href="#cb19-235" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'train_loss'</span>],</span>
+<span id="cb19-236"><a href="#cb19-236" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Train)'</span>,</span>
+<span id="cb19-237"><a href="#cb19-237" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
+<span id="cb19-238"><a href="#cb19-238" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'val_loss'</span>],</span>
+<span id="cb19-239"><a href="#cb19-239" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Val)'</span>,</span>
+<span id="cb19-240"><a href="#cb19-240" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
+<span id="cb19-241"><a href="#cb19-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-242"><a href="#cb19-242" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb19-243"><a href="#cb19-243" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Loss'</span>)</span>
+<span id="cb19-244"><a href="#cb19-244" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">'Loss Comparison'</span>)</span>
+<span id="cb19-245"><a href="#cb19-245" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].legend()</span>
+<span id="cb19-246"><a href="#cb19-246" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb19-247"><a href="#cb19-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-248"><a href="#cb19-248" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Epoch'</span>)</span>
-<span id="cb19-249"><a href="#cb19-249" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Loss'</span>)</span>
-<span id="cb19-250"><a href="#cb19-250" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">'Loss Comparison'</span>)</span>
-<span id="cb19-251"><a href="#cb19-251" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].legend()</span>
-<span id="cb19-252"><a href="#cb19-252" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb19-253"><a href="#cb19-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-254"><a href="#cb19-254" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Accuracy 对比</span></span>
-<span id="cb19-255"><a href="#cb19-255" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> strategy_name, data <span class="kw">in</span> results.items():</span>
-<span id="cb19-256"><a href="#cb19-256" aria-hidden="true" tabindex="-1"></a>        epochs_range <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(data[<span class="st">'history'</span>][<span class="st">'train_acc'</span>]) <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb19-257"><a href="#cb19-257" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'train_acc'</span>],</span>
-<span id="cb19-258"><a href="#cb19-258" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Train)'</span>,</span>
-<span id="cb19-259"><a href="#cb19-259" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
-<span id="cb19-260"><a href="#cb19-260" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'val_acc'</span>],</span>
-<span id="cb19-261"><a href="#cb19-261" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Val)'</span>,</span>
-<span id="cb19-262"><a href="#cb19-262" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
+<span id="cb19-248"><a href="#cb19-248" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Accuracy 对比</span></span>
+<span id="cb19-249"><a href="#cb19-249" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> strategy_name, data <span class="kw">in</span> results.items():</span>
+<span id="cb19-250"><a href="#cb19-250" aria-hidden="true" tabindex="-1"></a>        epochs_range <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(data[<span class="st">'history'</span>][<span class="st">'train_acc'</span>]) <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb19-251"><a href="#cb19-251" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'train_acc'</span>],</span>
+<span id="cb19-252"><a href="#cb19-252" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Train)'</span>,</span>
+<span id="cb19-253"><a href="#cb19-253" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
+<span id="cb19-254"><a href="#cb19-254" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].plot(epochs_range, data[<span class="st">'history'</span>][<span class="st">'val_acc'</span>],</span>
+<span id="cb19-255"><a href="#cb19-255" aria-hidden="true" tabindex="-1"></a>                    label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>strategy_name<span class="sc">}</span><span class="ss"> (Val)'</span>,</span>
+<span id="cb19-256"><a href="#cb19-256" aria-hidden="true" tabindex="-1"></a>                    linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span>data[<span class="st">'color'</span>])</span>
+<span id="cb19-257"><a href="#cb19-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-258"><a href="#cb19-258" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb19-259"><a href="#cb19-259" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_ylabel(<span class="st">'Accuracy'</span>)</span>
+<span id="cb19-260"><a href="#cb19-260" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_title(<span class="st">'Accuracy Comparison'</span>)</span>
+<span id="cb19-261"><a href="#cb19-261" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].legend()</span>
+<span id="cb19-262"><a href="#cb19-262" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb19-263"><a href="#cb19-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-264"><a href="#cb19-264" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Epoch'</span>)</span>
-<span id="cb19-265"><a href="#cb19-265" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_ylabel(<span class="st">'Accuracy'</span>)</span>
-<span id="cb19-266"><a href="#cb19-266" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_title(<span class="st">'Accuracy Comparison'</span>)</span>
-<span id="cb19-267"><a href="#cb19-267" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].legend()</span>
-<span id="cb19-268"><a href="#cb19-268" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb19-264"><a href="#cb19-264" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb19-265"><a href="#cb19-265" aria-hidden="true" tabindex="-1"></a>    plt.savefig(<span class="st">'transfer_learning_comparison.png'</span>, dpi<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb19-266"><a href="#cb19-266" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb19-267"><a href="#cb19-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-268"><a href="#cb19-268" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span>
 <span id="cb19-269"><a href="#cb19-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-270"><a href="#cb19-270" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb19-271"><a href="#cb19-271" aria-hidden="true" tabindex="-1"></a>    plt.savefig(<span class="st">'transfer_learning_comparison.png'</span>, dpi<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb19-272"><a href="#cb19-272" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb19-273"><a href="#cb19-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-274"><a href="#cb19-274" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span>
+<span id="cb19-270"><a href="#cb19-270" aria-hidden="true" tabindex="-1"></a><span class="co"># ==================== 可视化预测 ====================</span></span>
+<span id="cb19-271"><a href="#cb19-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-272"><a href="#cb19-272" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> visualize_predictions(model, num_images<span class="op">=</span><span class="dv">16</span>):</span>
+<span id="cb19-273"><a href="#cb19-273" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""可视化模型预测"""</span></span>
+<span id="cb19-274"><a href="#cb19-274" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
 <span id="cb19-275"><a href="#cb19-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-276"><a href="#cb19-276" aria-hidden="true" tabindex="-1"></a><span class="co"># ==================== 可视化预测 ====================</span></span>
-<span id="cb19-277"><a href="#cb19-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-278"><a href="#cb19-278" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> visualize_predictions(model, num_images<span class="op">=</span><span class="dv">16</span>):</span>
-<span id="cb19-279"><a href="#cb19-279" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""可视化模型预测"""</span></span>
-<span id="cb19-280"><a href="#cb19-280" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
-<span id="cb19-281"><a href="#cb19-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-282"><a href="#cb19-282" aria-hidden="true" tabindex="-1"></a>    images_so_far <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb19-283"><a href="#cb19-283" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">12</span>))</span>
-<span id="cb19-284"><a href="#cb19-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-285"><a href="#cb19-285" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb19-286"><a href="#cb19-286" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> inputs, labels <span class="kw">in</span> dataloaders[<span class="st">'val'</span>]:</span>
-<span id="cb19-287"><a href="#cb19-287" aria-hidden="true" tabindex="-1"></a>            inputs <span class="op">=</span> inputs.to(DEVICE)</span>
-<span id="cb19-288"><a href="#cb19-288" aria-hidden="true" tabindex="-1"></a>            labels <span class="op">=</span> labels.to(DEVICE)</span>
-<span id="cb19-289"><a href="#cb19-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-290"><a href="#cb19-290" aria-hidden="true" tabindex="-1"></a>            outputs <span class="op">=</span> model(inputs)</span>
-<span id="cb19-291"><a href="#cb19-291" aria-hidden="true" tabindex="-1"></a>            _, preds <span class="op">=</span> torch.<span class="bu">max</span>(outputs, <span class="dv">1</span>)</span>
-<span id="cb19-292"><a href="#cb19-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-293"><a href="#cb19-293" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(inputs.size()[<span class="dv">0</span>]):</span>
-<span id="cb19-294"><a href="#cb19-294" aria-hidden="true" tabindex="-1"></a>                images_so_far <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb19-295"><a href="#cb19-295" aria-hidden="true" tabindex="-1"></a>                ax <span class="op">=</span> plt.subplot(<span class="dv">4</span>, <span class="dv">4</span>, images_so_far)</span>
-<span id="cb19-296"><a href="#cb19-296" aria-hidden="true" tabindex="-1"></a>                ax.axis(<span class="st">'off'</span>)</span>
-<span id="cb19-297"><a href="#cb19-297" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-298"><a href="#cb19-298" aria-hidden="true" tabindex="-1"></a>                <span class="co"># 反归一化显示</span></span>
-<span id="cb19-299"><a href="#cb19-299" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> inputs.cpu().data[j]</span>
-<span id="cb19-300"><a href="#cb19-300" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> img.numpy().transpose((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
-<span id="cb19-301"><a href="#cb19-301" aria-hidden="true" tabindex="-1"></a>                mean <span class="op">=</span> np.array([<span class="fl">0.485</span>, <span class="fl">0.456</span>, <span class="fl">0.406</span>])</span>
-<span id="cb19-302"><a href="#cb19-302" aria-hidden="true" tabindex="-1"></a>                std <span class="op">=</span> np.array([<span class="fl">0.229</span>, <span class="fl">0.224</span>, <span class="fl">0.225</span>])</span>
-<span id="cb19-303"><a href="#cb19-303" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> std <span class="op">*</span> img <span class="op">+</span> mean</span>
-<span id="cb19-304"><a href="#cb19-304" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> np.clip(img, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb19-305"><a href="#cb19-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-306"><a href="#cb19-306" aria-hidden="true" tabindex="-1"></a>                ax.imshow(img)</span>
-<span id="cb19-307"><a href="#cb19-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-308"><a href="#cb19-308" aria-hidden="true" tabindex="-1"></a>                <span class="co"># 标题：预测 vs 真实</span></span>
-<span id="cb19-309"><a href="#cb19-309" aria-hidden="true" tabindex="-1"></a>                color <span class="op">=</span> <span class="st">'green'</span> <span class="cf">if</span> preds[j] <span class="op">==</span> labels[j] <span class="cf">else</span> <span class="st">'red'</span></span>
-<span id="cb19-310"><a href="#cb19-310" aria-hidden="true" tabindex="-1"></a>                ax.set_title(<span class="ss">f'Pred: </span><span class="sc">{</span>class_names[preds[j]]<span class="sc">}</span><span class="ch">\n</span><span class="ss">True: </span><span class="sc">{</span>class_names[labels[j]]<span class="sc">}</span><span class="ss">'</span>,</span>
-<span id="cb19-311"><a href="#cb19-311" aria-hidden="true" tabindex="-1"></a>                           color<span class="op">=</span>color, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb19-276"><a href="#cb19-276" aria-hidden="true" tabindex="-1"></a>    images_so_far <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb19-277"><a href="#cb19-277" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">12</span>))</span>
+<span id="cb19-278"><a href="#cb19-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-279"><a href="#cb19-279" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb19-280"><a href="#cb19-280" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> inputs, labels <span class="kw">in</span> dataloaders[<span class="st">'val'</span>]:</span>
+<span id="cb19-281"><a href="#cb19-281" aria-hidden="true" tabindex="-1"></a>            inputs <span class="op">=</span> inputs.to(DEVICE)</span>
+<span id="cb19-282"><a href="#cb19-282" aria-hidden="true" tabindex="-1"></a>            labels <span class="op">=</span> labels.to(DEVICE)</span>
+<span id="cb19-283"><a href="#cb19-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-284"><a href="#cb19-284" aria-hidden="true" tabindex="-1"></a>            outputs <span class="op">=</span> model(inputs)</span>
+<span id="cb19-285"><a href="#cb19-285" aria-hidden="true" tabindex="-1"></a>            _, preds <span class="op">=</span> torch.<span class="bu">max</span>(outputs, <span class="dv">1</span>)</span>
+<span id="cb19-286"><a href="#cb19-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-287"><a href="#cb19-287" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(inputs.size()[<span class="dv">0</span>]):</span>
+<span id="cb19-288"><a href="#cb19-288" aria-hidden="true" tabindex="-1"></a>                images_so_far <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb19-289"><a href="#cb19-289" aria-hidden="true" tabindex="-1"></a>                ax <span class="op">=</span> plt.subplot(<span class="dv">4</span>, <span class="dv">4</span>, images_so_far)</span>
+<span id="cb19-290"><a href="#cb19-290" aria-hidden="true" tabindex="-1"></a>                ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb19-291"><a href="#cb19-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-292"><a href="#cb19-292" aria-hidden="true" tabindex="-1"></a>                <span class="co"># 反归一化显示</span></span>
+<span id="cb19-293"><a href="#cb19-293" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> inputs.cpu().data[j]</span>
+<span id="cb19-294"><a href="#cb19-294" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> img.numpy().transpose((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
+<span id="cb19-295"><a href="#cb19-295" aria-hidden="true" tabindex="-1"></a>                mean <span class="op">=</span> np.array([<span class="fl">0.485</span>, <span class="fl">0.456</span>, <span class="fl">0.406</span>])</span>
+<span id="cb19-296"><a href="#cb19-296" aria-hidden="true" tabindex="-1"></a>                std <span class="op">=</span> np.array([<span class="fl">0.229</span>, <span class="fl">0.224</span>, <span class="fl">0.225</span>])</span>
+<span id="cb19-297"><a href="#cb19-297" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> std <span class="op">*</span> img <span class="op">+</span> mean</span>
+<span id="cb19-298"><a href="#cb19-298" aria-hidden="true" tabindex="-1"></a>                img <span class="op">=</span> np.clip(img, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb19-299"><a href="#cb19-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-300"><a href="#cb19-300" aria-hidden="true" tabindex="-1"></a>                ax.imshow(img)</span>
+<span id="cb19-301"><a href="#cb19-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-302"><a href="#cb19-302" aria-hidden="true" tabindex="-1"></a>                <span class="co"># 标题：预测 vs 真实</span></span>
+<span id="cb19-303"><a href="#cb19-303" aria-hidden="true" tabindex="-1"></a>                color <span class="op">=</span> <span class="st">'green'</span> <span class="cf">if</span> preds[j] <span class="op">==</span> labels[j] <span class="cf">else</span> <span class="st">'red'</span></span>
+<span id="cb19-304"><a href="#cb19-304" aria-hidden="true" tabindex="-1"></a>                ax.set_title(<span class="ss">f'Pred: </span><span class="sc">{</span>class_names[preds[j]]<span class="sc">}</span><span class="ch">\n</span><span class="ss">True: </span><span class="sc">{</span>class_names[labels[j]]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb19-305"><a href="#cb19-305" aria-hidden="true" tabindex="-1"></a>                           color<span class="op">=</span>color, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb19-306"><a href="#cb19-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-307"><a href="#cb19-307" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> images_so_far <span class="op">==</span> num_images:</span>
+<span id="cb19-308"><a href="#cb19-308" aria-hidden="true" tabindex="-1"></a>                    plt.tight_layout()</span>
+<span id="cb19-309"><a href="#cb19-309" aria-hidden="true" tabindex="-1"></a>                    plt.savefig(<span class="st">'predictions.png'</span>, dpi<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb19-310"><a href="#cb19-310" aria-hidden="true" tabindex="-1"></a>                    plt.show()</span>
+<span id="cb19-311"><a href="#cb19-311" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">return</span></span>
 <span id="cb19-312"><a href="#cb19-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-313"><a href="#cb19-313" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> images_so_far <span class="op">==</span> num_images:</span>
-<span id="cb19-314"><a href="#cb19-314" aria-hidden="true" tabindex="-1"></a>                    plt.tight_layout()</span>
-<span id="cb19-315"><a href="#cb19-315" aria-hidden="true" tabindex="-1"></a>                    plt.savefig(<span class="st">'predictions.png'</span>, dpi<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb19-316"><a href="#cb19-316" aria-hidden="true" tabindex="-1"></a>                    plt.show()</span>
-<span id="cb19-317"><a href="#cb19-317" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">return</span></span>
+<span id="cb19-313"><a href="#cb19-313" aria-hidden="true" tabindex="-1"></a><span class="co"># ==================== 主程序 ====================</span></span>
+<span id="cb19-314"><a href="#cb19-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-315"><a href="#cb19-315" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb19-316"><a href="#cb19-316" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 对比不同策略</span></span>
+<span id="cb19-317"><a href="#cb19-317" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> compare_strategies()</span>
 <span id="cb19-318"><a href="#cb19-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-319"><a href="#cb19-319" aria-hidden="true" tabindex="-1"></a><span class="co"># ==================== 主程序 ====================</span></span>
-<span id="cb19-320"><a href="#cb19-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-321"><a href="#cb19-321" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
-<span id="cb19-322"><a href="#cb19-322" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 对比不同策略</span></span>
-<span id="cb19-323"><a href="#cb19-323" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> compare_strategies()</span>
-<span id="cb19-324"><a href="#cb19-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-325"><a href="#cb19-325" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 可视化最佳模型的预测</span></span>
-<span id="cb19-326"><a href="#cb19-326" aria-hidden="true" tabindex="-1"></a>    best_strategy <span class="op">=</span> <span class="bu">max</span>(results.items(),</span>
-<span id="cb19-327"><a href="#cb19-327" aria-hidden="true" tabindex="-1"></a>                       key<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">max</span>(x[<span class="dv">1</span>][<span class="st">'history'</span>][<span class="st">'val_acc'</span>]))</span>
-<span id="cb19-328"><a href="#cb19-328" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="ss">最佳策略: </span><span class="sc">{</span>best_strategy[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb19-329"><a href="#cb19-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-330"><a href="#cb19-330" aria-hidden="true" tabindex="-1"></a>    visualize_predictions(best_strategy[<span class="dv">1</span>][<span class="st">'model'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-319"><a href="#cb19-319" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 可视化最佳模型的预测</span></span>
+<span id="cb19-320"><a href="#cb19-320" aria-hidden="true" tabindex="-1"></a>    best_strategy <span class="op">=</span> <span class="bu">max</span>(results.items(),</span>
+<span id="cb19-321"><a href="#cb19-321" aria-hidden="true" tabindex="-1"></a>                       key<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">max</span>(x[<span class="dv">1</span>][<span class="st">'history'</span>][<span class="st">'val_acc'</span>]))</span>
+<span id="cb19-322"><a href="#cb19-322" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="ss">最佳策略: </span><span class="sc">{</span>best_strategy[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb19-323"><a href="#cb19-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-324"><a href="#cb19-324" aria-hidden="true" tabindex="-1"></a>    visualize_predictions(best_strategy[<span class="dv">1</span>][<span class="st">'model'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
@@ -1643,20 +1637,14 @@ T → ∞: 均匀分布</code></pre>
 <span id="cb31-94"><a href="#cb31-94" aria-hidden="true" tabindex="-1"></a>    teacher.fc <span class="op">=</span> nn.Linear(teacher.fc.in_features, <span class="dv">10</span>)</span>
 <span id="cb31-95"><a href="#cb31-95" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-96"><a href="#cb31-96" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 学生模型（小）</span></span>
-<span id="cb31-97"><a href="#cb31-97" aria-hidden="true" tabindex="-1"></a>    student <span class="op">=</span> models.resnet18(pretraine</span>
-<span id="cb31-98"><a href="#cb31-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-99"><a href="#cb31-99" aria-hidden="true" tabindex="-1"></a><span class="op">-----</span></span>
-<span id="cb31-100"><a href="#cb31-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-101"><a href="#cb31-101" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> Continue</span>
-<span id="cb31-102"><a href="#cb31-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-103"><a href="#cb31-103" aria-hidden="true" tabindex="-1"></a>d<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb31-104"><a href="#cb31-104" aria-hidden="true" tabindex="-1"></a>    student.fc <span class="op">=</span> nn.Linear(student.fc.in_features, <span class="dv">10</span>)</span>
-<span id="cb31-105"><a href="#cb31-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-106"><a href="#cb31-106" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 知识蒸馏</span></span>
-<span id="cb31-107"><a href="#cb31-107" aria-hidden="true" tabindex="-1"></a>    student <span class="op">=</span> knowledge_distillation(</span>
-<span id="cb31-108"><a href="#cb31-108" aria-hidden="true" tabindex="-1"></a>        teacher, student, train_loader,</span>
-<span id="cb31-109"><a href="#cb31-109" aria-hidden="true" tabindex="-1"></a>        num_epochs<span class="op">=</span><span class="dv">50</span>, temperature<span class="op">=</span><span class="fl">3.0</span></span>
-<span id="cb31-110"><a href="#cb31-110" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb31-97"><a href="#cb31-97" aria-hidden="true" tabindex="-1"></a>    student <span class="op">=</span> models.resnet18(pretrained<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb31-98"><a href="#cb31-98" aria-hidden="true" tabindex="-1"></a>    student.fc <span class="op">=</span> nn.Linear(student.fc.in_features, <span class="dv">10</span>)</span>
+<span id="cb31-99"><a href="#cb31-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-100"><a href="#cb31-100" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 知识蒸馏</span></span>
+<span id="cb31-101"><a href="#cb31-101" aria-hidden="true" tabindex="-1"></a>    student <span class="op">=</span> knowledge_distillation(</span>
+<span id="cb31-102"><a href="#cb31-102" aria-hidden="true" tabindex="-1"></a>        teacher, student, train_loader,</span>
+<span id="cb31-103"><a href="#cb31-103" aria-hidden="true" tabindex="-1"></a>        num_epochs<span class="op">=</span><span class="dv">50</span>, temperature<span class="op">=</span><span class="fl">3.0</span></span>
+<span id="cb31-104"><a href="#cb31-104" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
