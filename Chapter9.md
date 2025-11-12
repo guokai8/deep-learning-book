@@ -463,13 +463,7 @@ def compare_strategies():
             'color': 'blue'
         },
         'Fine-tuning (全局)': {
-            'model':
-
------
-
-> contonue
-
-create_model('resnet50', NUM_CLASSES, feature_extract=False),
+            'model': create_model('resnet50', NUM_CLASSES, feature_extract=False),
             'lr': 0.0001,
             'color': 'red'
         }
@@ -1358,13 +1352,7 @@ if __name__ == '__main__':
     teacher.fc = nn.Linear(teacher.fc.in_features, 10)
 
     # 学生模型（小）
-    student = models.resnet18(pretraine
-
------
-
-> Continue
-
-d=False)
+    student = models.resnet18(pretrained=False)
     student.fc = nn.Linear(student.fc.in_features, 10)
 
     # 知识蒸馏

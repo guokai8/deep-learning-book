@@ -443,13 +443,7 @@ class AgglomerativeClustering:
 
         # 根据 n_clusters 切割树状图
         from scipy.cluster.hierarchy import fcluster
-        self
-
------
-
-> continue
-
-.labels = fcluster(self.linkage_matrix,
+        self.labels = fcluster(self.linkage_matrix,
                                      self.n_clusters,
                                      criterion='maxclust') - 1  # 转为 0-based
 
